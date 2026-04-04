@@ -1,0 +1,1636 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asesoría Fiscal · Rentas · Becas — Gestoría Justo Guevara</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#f4f5f7;--surface:#fff;--surface2:#f8f9fb;--surface3:#eef0f4;
+  --border:#dde1e8;--text:#1a1d27;--text-dim:#5c6178;--text-muted:#8b90a5;
+  --accent:#7c3aed;--accent-light:rgba(124,58,237,0.08);--accent-glow:rgba(124,58,237,0.15);
+  --red:#dc3545;--red-dim:rgba(220,53,69,0.1);
+  --orange:#e8943d;--orange-dim:rgba(232,148,61,0.1);
+  --green:#28a745;--green-dim:rgba(40,167,69,0.1);
+  --blue:#3b82f6;--blue-dim:rgba(59,130,246,0.1);
+  --gold:#c9a44c;--gold-dim:rgba(201,164,76,0.1);
+  --teal:#0d9488;--teal-dim:rgba(13,148,136,0.1);
+  --radius:10px;--shadow:0 2px 12px rgba(0,0,0,0.08);--shadow-lg:0 8px 30px rgba(0,0,0,0.12);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* HEADER */
+.header{background:var(--accent);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(124,58,237,0.2)}
+.logo{font-family:'Playfair Display',serif;font-size:20px;font-weight:800;color:#fff}
+.logo span{color:rgba(255,255,255,0.7);font-size:12px;font-family:'DM Sans',sans-serif;margin-left:10px;font-weight:400}
+.header-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sync-status{font-size:12px;color:rgba(255,255,255,0.7);padding:4px 10px;border-radius:20px;background:rgba(255,255,255,0.15)}
+.header-btn{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:#fff;padding:7px 14px;border-radius:var(--radius);cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;transition:all 0.2s}
+.header-btn:hover{background:rgba(255,255,255,0.25)}
+
+/* NAV */
+.nav{display:flex;gap:2px;padding:0 32px;background:var(--surface);border-bottom:1px solid var(--border);overflow-x:auto}
+.nav-tab{padding:13px 18px;cursor:pointer;font-size:13px;font-weight:500;color:var(--text-dim);border:none;background:none;font-family:'DM Sans',sans-serif;border-bottom:3px solid transparent;white-space:nowrap;transition:all 0.2s}
+.nav-tab:hover{color:var(--text)}
+.nav-tab.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+
+/* MAIN */
+.main{max-width:1400px;margin:0 auto;padding:24px 32px}
+.panel{display:none}.panel.active{display:block}
+
+/* CARD */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:20px;box-shadow:var(--shadow)}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:24px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px;text-align:center;box-shadow:var(--shadow)}
+.stat-number{font-family:'Playfair Display',serif;font-size:30px;font-weight:800;color:var(--accent)}
+.stat-label{font-size:11px;color:var(--text-dim);margin-top:4px;text-transform:uppercase;letter-spacing:1px}
+
+/* FORMS */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-grid.three{grid-template-columns:1fr 1fr 1fr}
+.form-group{display:flex;flex-direction:column;gap:4px}
+.form-group.full{grid-column:1/-1}
+.form-group label{font-size:11px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px}
+.form-group input,.form-group select,.form-group textarea{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;transition:border-color 0.2s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-light)}
+.form-group textarea{resize:vertical;min-height:65px}
+.form-section{grid-column:1/-1;font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:1px;padding:8px 0 3px;border-bottom:2px solid var(--accent-light);margin-top:6px}
+
+/* BTN */
+.btn{padding:9px 20px;border-radius:8px;border:none;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;display:inline-flex;align-items:center;gap:7px}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:#6d28d9}
+.btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border)}.btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+.btn-danger{background:var(--red-dim);color:var(--red)}.btn-danger:hover{background:rgba(220,53,69,0.2)}
+.btn-sm{padding:5px 12px;font-size:12px}
+.btn-row{display:flex;gap:10px;margin-top:18px;justify-content:flex-end}
+
+/* TABLE */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+thead th{background:var(--surface2);padding:10px 12px;text-align:left;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:var(--text-dim);border-bottom:2px solid var(--border);white-space:nowrap}
+tbody td{padding:10px 12px;font-size:13px;border-bottom:1px solid var(--border);vertical-align:middle}
+tbody tr{transition:background 0.15s;cursor:pointer}
+tbody tr:hover{background:var(--accent-light)}
+
+/* BADGE */
+.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.b-orange{background:var(--orange-dim);color:var(--orange)}
+.b-blue{background:var(--blue-dim);color:var(--blue)}
+.b-green{background:var(--green-dim);color:var(--green)}
+.b-gold{background:var(--gold-dim);color:var(--gold)}
+.b-teal{background:var(--teal-dim);color:var(--teal)}
+.b-red{background:var(--red-dim);color:var(--red)}
+.b-gray{background:var(--surface3);color:var(--text-muted)}
+.b-purple{background:var(--accent-light);color:var(--accent)}
+
+/* SEARCH */
+.search-bar{display:flex;gap:10px;margin-bottom:18px;align-items:center;flex-wrap:wrap}
+.search-bar input,.search-bar select{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:9px 14px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif}
+.search-bar input{flex:1;min-width:180px}
+.search-bar input:focus,.search-bar select:focus{outline:none;border-color:var(--accent)}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(3px)}
+.modal-overlay.active{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:14px;width:92%;max-width:780px;max-height:90vh;overflow-y:auto;padding:28px;box-shadow:var(--shadow-lg)}
+.modal-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;color:var(--accent)}
+.modal-close{background:none;border:none;color:var(--text-dim);font-size:26px;cursor:pointer;line-height:1}
+.modal-close:hover{color:var(--text)}
+
+/* DETAIL */
+.detail-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.detail-exp-num{font-family:'Playfair Display',serif;font-size:26px;font-weight:800;color:var(--accent)}
+.detail-client{font-size:15px;color:var(--text-dim);margin-top:3px}
+.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.info-item label{display:block;font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:2px}
+.info-item span{font-size:13px;font-weight:500}
+.sdiv{height:1px;background:var(--border);margin:18px 0}
+.stitle{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--accent);margin-bottom:14px}
+
+/* CAMPAÑA SELECTOR */
+.campana-bar{display:flex;align-items:center;gap:10px;margin-bottom:18px;flex-wrap:wrap}
+.campana-btn{padding:6px 16px;border-radius:20px;border:1px solid var(--border);background:var(--surface);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all 0.2s;color:var(--text-dim)}
+.campana-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.campana-btn:hover{border-color:var(--accent)}
+.nueva-campana{padding:6px 14px;border-radius:20px;border:1px dashed var(--border);background:none;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;color:var(--text-muted);transition:all 0.2s}
+.nueva-campana:hover{border-color:var(--accent);color:var(--accent)}
+
+/* CHECKBOX group */
+.check-group{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:4px}
+.check-item{display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer}
+.check-item input{width:15px;height:15px;accent-color:var(--accent)}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--green);color:#fff;padding:12px 22px;border-radius:8px;font-weight:600;font-size:13px;transform:translateY(100px);opacity:0;transition:all 0.3s;z-index:300;box-shadow:var(--shadow-lg)}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.error{background:var(--red)}.toast.info{background:var(--blue)}
+
+.empty-state{text-align:center;padding:40px 20px;color:var(--text-muted)}
+
+@media(max-width:900px){
+  .header{padding:12px 16px}.nav{padding:0 16px}.main{padding:16px}
+  .form-grid,.form-grid.three{grid-template-columns:1fr}
+  .info-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">Fiscal · Rentas · Becas <span>Gestoría Justo Guevara</span></div>
+  <div class="header-right">
+    <span class="sync-status" id="sync-status">⏳ Conectando...</span>
+    <button class="header-btn" onclick="syncToSheets()">⬆️ Subir</button>
+    <button class="header-btn" onclick="syncFromSheets()">⬇️ Descargar</button>
+    <button class="header-btn" onclick="openConfig()">⚙️</button>
+  </div>
+</div>
+
+<div class="nav">
+  <button class="nav-tab active" onclick="showPanel('dashboard',this)">📊 Dashboard</button>
+  <button class="nav-tab" onclick="showPanel('fiscal',this)">💼 Fiscal</button>
+  <button class="nav-tab" onclick="showPanel('rentas',this)">📄 Rentas</button>
+  <button class="nav-tab" onclick="showPanel('becas',this)">🎓 Becas</button>
+  <button class="nav-tab" onclick="showPanel('seguimiento',this)">📋 Seg. Becas</button>
+  <button class="nav-tab" onclick="showPanel('facturacion',this)">💶 Facturación</button>
+</div>
+
+<div class="main">
+
+<!-- ═══════════ DASHBOARD ═══════════ -->
+<div class="panel active" id="panel-dashboard">
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px" id="dash-ingresos"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <div class="card" id="dash-alertas-becas">
+      <div style="font-size:15px;font-weight:700;margin-bottom:14px;color:var(--accent)">📋 Seguimientos becas pendientes</div>
+      <div id="dash-seg-list"></div>
+    </div>
+    <div class="card" id="dash-vencimientos-fiscal">
+      <div style="font-size:15px;font-weight:700;margin-bottom:14px;color:var(--accent)">⚠️ Próximos vencimientos fiscales</div>
+      <div id="dash-venc-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ SEGUIMIENTO BECAS ═══════════ -->
+<div class="panel" id="panel-seguimiento">
+  <div class="campana-bar" id="seg-campanas"></div>
+  <div class="search-bar">
+    <input type="text" id="seg-search" placeholder="Buscar alumno..." oninput="renderSeguimiento()">
+    <select id="seg-fest" onchange="renderSeguimiento()">
+      <option value="">Todos</option>
+      <option value="pendiente">Pendiente</option>
+      <option value="concedida">Concedida</option>
+      <option value="denegada">Denegada</option>
+      <option value="requerimiento">Requerimiento</option>
+      <option value="modificacion">Modificación</option>
+    </select>
+    <button class="btn btn-primary" onclick="openModalSeguimiento()">+ Nuevo seguimiento</button>
+  </div>
+  <div class="card"><div class="table-wrap">
+    <table><thead><tr>
+      <th>Alumno</th><th>Campaña</th><th>Resultado</th><th>Fecha resolución</th>
+      <th>Plazo respuesta</th><th>Documentación pendiente</th><th>Estado</th><th></th>
+    </tr></thead><tbody id="seg-tbody"></tbody></table>
+  </div></div>
+</div>
+
+<!-- ═══════════ FISCAL ═══════════ -->
+<div class="panel" id="panel-fiscal">
+  <div class="stats-row" id="fiscal-stats"></div>
+  <div class="search-bar">
+    <input type="text" id="fiscal-search" placeholder="Buscar expediente, cliente..." oninput="renderFiscal()">
+    <select id="fiscal-fest" onchange="renderFiscal()">
+      <option value="">Todos los estados</option>
+      <option value="PENDIENTE">Pendiente</option>
+      <option value="SOLICITADO">Solicitado</option>
+      <option value="FINALIZADO">Finalizado</option>
+      <option value="DENEGADO">Denegado</option>
+    </select>
+    <select id="fiscal-ffac" onchange="renderFiscal()">
+      <option value="">Toda facturación</option>
+      <option value="en_tramite">En trámite</option>
+      <option value="pte_facturar">Pte. facturar</option>
+      <option value="facturado">Facturado</option>
+    </select>
+    <button class="btn btn-primary" onclick="openModalFiscal()">+ Nuevo</button>
+  </div>
+  <div class="card"><div class="table-wrap">
+    <table><thead><tr>
+      <th>Nº Exp.</th><th>Cliente</th><th>Tipo</th><th>Asunto</th><th>Estado</th>
+      <th>Vto. Límite</th><th>Cobrado</th><th>Recibo</th><th>Facturación</th><th>📂</th>
+    </tr></thead><tbody id="fiscal-tbody"></tbody></table>
+  </div></div>
+</div>
+
+<!-- ═══════════ RENTAS ═══════════ -->
+<div class="panel" id="panel-rentas">
+  <div class="campana-bar" id="rentas-campanas"></div>
+  <div class="stats-row" id="rentas-stats"></div>
+  <div class="search-bar">
+    <input type="text" id="rentas-search" placeholder="Buscar cliente..." oninput="renderRentas()">
+    <select id="rentas-fest" onchange="renderRentas()">
+      <option value="">Todos los estados</option>
+      <option value="pte_avisar">Pte. avisar</option>
+      <option value="avisado">Avisado</option>
+      <option value="en_tramite">En trámite</option>
+      <option value="tramitado">Tramitado</option>
+      <option value="cobrado">Cobrado</option>
+    </select>
+    <button class="btn btn-primary" onclick="openModalRenta()">+ Nueva renta</button>
+  </div>
+  <div class="card"><div class="table-wrap">
+    <table><thead><tr>
+      <th>Cliente</th><th>DNI</th><th>Vd. DNI</th><th>Pareja</th><th>Ref. Fiscal</th>
+      <th>Precio</th><th>Recibo</th><th>Estado</th><th>📂</th>
+    </tr></thead><tbody id="rentas-tbody"></tbody></table>
+  </div></div>
+</div>
+
+<!-- ═══════════ BECAS ═══════════ -->
+<div class="panel" id="panel-becas">
+  <div class="campana-bar" id="becas-campanas"></div>
+  <div class="stats-row" id="becas-stats"></div>
+  <div class="search-bar">
+    <input type="text" id="becas-search" placeholder="Buscar alumno, familia..." oninput="renderBecas()">
+    <select id="becas-fest" onchange="renderBecas()">
+      <option value="">Todos los estados</option>
+      <option value="pte_avisar">Pte. avisar</option>
+      <option value="avisado">Avisado</option>
+      <option value="en_tramite">En trámite</option>
+      <option value="tramitado">Tramitado</option>
+      <option value="cobrado">Cobrado</option>
+    </select>
+    <button class="btn btn-primary" onclick="openModalBeca()">+ Nueva beca</button>
+  </div>
+  <div class="card"><div class="table-wrap">
+    <table><thead><tr>
+      <th>Alumno</th><th>DNI</th><th>Curso actual</th><th>Próximo curso</th><th>Centro</th>
+      <th>Precio</th><th>Recibo</th><th>Estado</th>
+    </tr></thead><tbody id="becas-tbody"></tbody></table>
+  </div></div>
+</div>
+
+<!-- ═══════════ FACTURACIÓN ═══════════ -->
+<div class="panel" id="panel-facturacion">
+  <div class="search-bar">
+    <input type="text" id="fac-search" placeholder="Buscar..." oninput="renderFacturacion()">
+    <select id="fac-filter" onchange="renderFacturacion()">
+      <option value="pte_facturar">Pendientes de facturar</option>
+      <option value="facturado">Facturados</option>
+      <option value="">Todos</option>
+    </select>
+  </div>
+  <div class="card"><div class="table-wrap">
+    <table><thead><tr>
+      <th>Tipo</th><th>Ref.</th><th>Cliente</th><th>Concepto</th>
+      <th>Importe</th><th>Recibo</th><th>Estado</th><th>Acción</th>
+    </tr></thead><tbody id="fac-tbody"></tbody></table>
+  </div></div>
+</div>
+
+</div><!-- /main -->
+
+<!-- ══ MODAL SEGUIMIENTO BECA ══ -->
+<div class="modal-overlay" id="modal-seguimiento">
+<div class="modal" style="max-width:720px">
+  <div class="modal-title"><span id="modal-seg-title">Seguimiento septiembre</span><button class="modal-close" onclick="closeModal('modal-seguimiento')">&times;</button></div>
+  <form id="form-seg" onsubmit="saveSeguimiento(event)">
+    <input type="hidden" id="seg-id">
+    <input type="hidden" id="seg-beca-id">
+    <div class="form-grid three">
+      <div class="form-section">Beca vinculada</div>
+      <div class="form-group"><label>Campaña *</label>
+        <select id="seg-campana-sel" onchange="cargarAlumnosSeg()">
+        </select>
+      </div>
+      <div class="form-group"><label>Alumno *</label>
+        <select id="seg-alumno-sel" required>
+          <option value="">Selecciona campaña primero...</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Año campaña beca</label>
+        <input type="text" id="seg-anio" placeholder="Ej: 2026"></div>
+
+      <div class="form-section">Resultado resolución</div>
+      <div class="form-group"><label>Resultado *</label>
+        <select id="seg-resultado" required>
+          <option value="pendiente">⏳ Pendiente resolución</option>
+          <option value="concedida">✅ Concedida</option>
+          <option value="denegada">❌ Denegada</option>
+          <option value="requerimiento">📋 Requerimiento documentación</option>
+          <option value="modificacion">✏️ Modificación de datos</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Fecha resolución</label><input type="date" id="seg-fecha-resolucion"></div>
+      <div class="form-group"><label>Plazo respuesta / Vencimiento</label><input type="date" id="seg-plazo"></div>
+      <div class="form-group"><label>Fecha inicio campaña (para Vencimientos)</label><input type="date" id="seg-fecha-inicio"></div>
+
+      <div class="form-section">Documentación y seguimiento</div>
+      <div class="form-group full"><label>Documentación pendiente / Requerida</label>
+        <textarea id="seg-documentacion" placeholder="Ej: Certificado de matrícula, Libro de familia actualizado..."></textarea>
+      </div>
+      <div class="form-group full"><label>Observaciones / Notas de seguimiento</label>
+        <textarea id="seg-obs" placeholder="Notas sobre el seguimiento de septiembre..."></textarea>
+      </div>
+      <div class="form-group"><label>Estado seguimiento *</label>
+        <select id="seg-estado">
+          <option value="pendiente">⏳ Pendiente</option>
+          <option value="en_tramite">📄 En trámite</option>
+          <option value="resuelto">✅ Resuelto</option>
+        </select>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button type="button" class="btn btn-secondary" onclick="closeModal('modal-seguimiento')">Cancelar</button>
+      <button type="submit" class="btn btn-primary">💾 Guardar</button>
+    </div>
+  </form>
+</div></div>
+
+<!-- ══ MODAL FISCAL ══ -->
+<div class="modal-overlay" id="modal-fiscal">
+<div class="modal" style="max-width:820px">
+  <div class="modal-title"><span id="modal-fiscal-title">Nuevo expediente fiscal</span><button class="modal-close" onclick="closeModal('modal-fiscal')">&times;</button></div>
+  <form id="form-fiscal" onsubmit="saveFiscal(event)">
+    <input type="hidden" id="fis-id">
+    <div class="form-grid three">
+      <div class="form-section">Identificación</div>
+      <div class="form-group"><label>Nº Expediente *</label><input type="text" id="fis-numero" required placeholder="AS26/001"></div>
+      <div class="form-group"><label>Cliente *</label><input type="text" id="fis-cliente" required></div>
+      <div class="form-group"><label>DNI/CIF</label><input type="text" id="fis-dni"></div>
+      <div class="form-group"><label>Teléfono</label><input type="text" id="fis-telefono"></div>
+      <div class="form-group"><label>Email</label><input type="email" id="fis-email"></div>
+      <div class="form-group"><label>Localidad</label><input type="text" id="fis-localidad"></div>
+      <div class="form-group"><label>Certificado digital</label>
+        <select id="fis-cert-digital">
+          <option value="">No consta</option>
+          <option value="si">✅ Sí, lo tenemos</option>
+          <option value="no">❌ No lo tenemos</option>
+          <option value="caducado">⚠️ Caducado</option>
+        </select>
+      </div>
+
+      <div class="form-section">Asunto</div>
+      <div class="form-group"><label>Tipo</label>
+        <select id="fis-tipo"><option value="">Seleccionar...</option>
+          <option>AGENCIA TRIBUTARIA</option><option>SEGURIDAD SOCIAL</option>
+          <option>GESTION SOCIEDAD</option><option>BECAS</option><option>CERES</option>
+          <option>FACE</option><option>CONTRATO PRIVADO</option><option>ALEGACIONES</option><option>VARIOS</option>
+        </select>
+      </div>
+      <div class="form-group full"><label>Asunto *</label><textarea id="fis-asunto" required></textarea></div>
+      <div class="form-group"><label>Fecha inicio</label><input type="date" id="fis-fecha-inicio"></div>
+      <div class="form-group"><label>Fecha límite / Vencimiento</label><input type="date" id="fis-fecha-limite"></div>
+
+      <div class="form-section">Estado</div>
+      <div class="form-group"><label>Estado *</label>
+        <select id="fis-estado"><option value="PENDIENTE">Pendiente</option><option value="SOLICITADO">Solicitado</option><option value="FINALIZADO">Finalizado</option><option value="DENEGADO">Denegado</option></select>
+      </div>
+      <div class="form-group"><label>Resolución</label><input type="text" id="fis-resolucion"></div>
+      <div class="form-group"><label>Estado facturación</label>
+        <select id="fis-facturacion"><option value="en_tramite">⏳ En trámite</option><option value="pte_facturar">🔔 Pte. facturar</option><option value="facturado">✅ Facturado</option></select>
+      </div>
+
+      <div class="form-section">Económico</div>
+      <div class="form-group"><label>Total expediente (€)</label><input type="number" step="0.01" id="fis-total" value="0" oninput="calcFisPendiente()"></div>
+      <div class="form-group"><label>Provisión (€)</label><input type="number" step="0.01" id="fis-provision" value="0" oninput="calcFisPendiente()"></div>
+      <div class="form-group"><label>Fecha pago provisión</label><input type="date" id="fis-fecha-prov"></div>
+      <div class="form-group"><label>Otros pagos (€)</label><input type="number" step="0.01" id="fis-otros" value="0" oninput="calcFisPendiente()"></div>
+      <div class="form-group"><label>Fecha otros pagos</label><input type="date" id="fis-fecha-otros"></div>
+      <div class="form-group"><label>Cobrado (€)</label><input type="number" step="0.01" id="fis-cobrado" value="0" oninput="calcFisPendiente()"></div>
+      <div class="form-group"><label>Fecha cobro</label><input type="date" id="fis-fecha-cobro"></div>
+      <div class="form-group"><label>Nº Recibo / Referencia</label><input type="text" id="fis-recibo" placeholder="Ej: REC-2026-001"></div>
+      <div class="form-group"><label>Pendiente (€)</label><input type="number" step="0.01" id="fis-pendiente" value="0" readonly style="background:var(--surface3);font-weight:700"></div>
+
+      <div class="form-section">Observaciones</div>
+      <div class="form-group full"><label>Observaciones</label><textarea id="fis-obs"></textarea></div>
+    </div>
+    <div class="btn-row">
+      <button type="button" class="btn btn-secondary" onclick="closeModal('modal-fiscal')">Cancelar</button>
+      <button type="submit" class="btn btn-primary">💾 Guardar</button>
+    </div>
+  </form>
+</div></div>
+
+<!-- ══ MODAL RENTA ══ -->
+<div class="modal-overlay" id="modal-renta">
+<div class="modal" style="max-width:820px">
+  <div class="modal-title"><span id="modal-renta-title">Nueva renta</span><button class="modal-close" onclick="closeModal('modal-renta')">&times;</button></div>
+  <form id="form-renta" onsubmit="saveRenta(event)">
+    <input type="hidden" id="ren-id">
+    <input type="hidden" id="ren-campana">
+    <div class="form-grid three">
+      <div class="form-section">Titular</div>
+      <div class="form-group"><label>Nombre y apellidos *</label><input type="text" id="ren-nombre" required></div>
+      <div class="form-group"><label>DNI *</label><input type="text" id="ren-dni" required></div>
+      <div class="form-group"><label>Fecha validez DNI</label><input type="date" id="ren-vd-dni"></div>
+      <div class="form-group"><label>Código referencia fiscal</label><input type="text" id="ren-ref" placeholder="Código de referencia catastral/fiscal"></div>
+      <div class="form-group"><label>Teléfono</label><input type="text" id="ren-telefono"></div>
+      <div class="form-group"><label>Email</label><input type="email" id="ren-email"></div>
+
+      <div class="form-section">Declaración conjunta (pareja) — dejar vacío si individual</div>
+      <div class="form-group"><label>Nombre pareja</label><input type="text" id="ren-pareja-nombre"></div>
+      <div class="form-group"><label>DNI pareja</label><input type="text" id="ren-pareja-dni"></div>
+      <div class="form-group"><label>Fecha validez DNI pareja</label><input type="date" id="ren-pareja-vd-dni"></div>
+      <div class="form-group"><label>Código ref. pareja</label><input type="text" id="ren-pareja-ref"></div>
+
+      <div class="form-section">Circunstancias especiales</div>
+      <div class="form-group full">
+        <label>Marcar lo que aplica</label>
+        <div class="check-group" style="margin-top:8px">
+          <label class="check-item"><input type="checkbox" id="ren-invalidez"> Invalidez / discapacidad</label>
+          <label class="check-item"><input type="checkbox" id="ren-fam-numerosa"> Familia numerosa</label>
+          <label class="check-item"><input type="checkbox" id="ren-extranjero"> Rentas en el extranjero</label>
+          <label class="check-item"><input type="checkbox" id="ren-seguros"> Seguros privados</label>
+          <label class="check-item"><input type="checkbox" id="ren-donaciones"> Donaciones</label>
+          <label class="check-item"><input type="checkbox" id="ren-patrimonio"> Variación patrimonial</label>
+        </div>
+      </div>
+      <div class="form-group full"><label>Observaciones adicionales</label><textarea id="ren-obs" placeholder="Detalles sobre invalidez, tipo de seguro, tipo de donación, etc."></textarea></div>
+
+      <div class="form-section">Económico y estado</div>
+      <div class="form-group"><label>Precio cobrado (€)</label><input type="number" step="0.01" id="ren-precio" value="0"></div>
+      <div class="form-group"><label>Fecha cobro</label><input type="date" id="ren-fecha-cobro"></div>
+      <div class="form-group"><label>Nº Recibo / Referencia</label><input type="text" id="ren-recibo" placeholder="Ej: REC-2026-001"></div>
+      <div class="form-group"><label>Estado *</label>
+        <select id="ren-estado">
+          <option value="pte_avisar">⏳ Pendiente avisar</option>
+          <option value="avisado">📞 Avisado</option>
+          <option value="en_tramite">📄 En trámite</option>
+          <option value="tramitado">✅ Tramitado</option>
+          <option value="cobrado">💶 Cobrado</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Estado facturación</label>
+        <select id="ren-facturacion"><option value="en_tramite">⏳ En trámite</option><option value="pte_facturar">🔔 Pte. facturar</option><option value="facturado">✅ Facturado</option></select>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button type="button" class="btn btn-secondary" onclick="closeModal('modal-renta')">Cancelar</button>
+      <button type="submit" class="btn btn-primary">💾 Guardar</button>
+    </div>
+  </form>
+</div></div>
+
+<!-- ══ MODAL BECA ══ -->
+<div class="modal-overlay" id="modal-beca">
+<div class="modal" style="max-width:860px">
+  <div class="modal-title"><span id="modal-beca-title">Nueva beca</span><button class="modal-close" onclick="closeModal('modal-beca')">&times;</button></div>
+  <form id="form-beca" onsubmit="saveBeca(event)">
+    <input type="hidden" id="bec-id">
+    <input type="hidden" id="bec-campana">
+    <div class="form-grid three">
+      <div class="form-section">Datos del alumno</div>
+      <div class="form-group"><label>Nombre y apellidos *</label><input type="text" id="bec-alumno" required></div>
+      <div class="form-group"><label>DNI/NIE alumno</label><input type="text" id="bec-dni"></div>
+      <div class="form-group"><label>Fecha caducidad DNI/NIE</label><input type="date" id="bec-vd-dni"></div>
+      <div class="form-group"><label>Nº soporte DNI/NIE</label><input type="text" id="bec-soporte-dni" placeholder="Nº soporte del documento"></div>
+      <div class="form-group"><label>Teléfono contacto</label><input type="text" id="bec-telefono"></div>
+      <div class="form-group"><label>Email</label><input type="email" id="bec-email"></div>
+      <div class="form-group"><label>Dirección</label><input type="text" id="bec-direccion"></div>
+      <div class="form-group"><label>Cuenta bancaria (IBAN)</label><input type="text" id="bec-iban" placeholder="ES00 0000 0000 00 0000000000"></div>
+
+      <div class="form-section">Estudios</div>
+      <div class="form-group"><label>Curso que está cursando *</label><input type="text" id="bec-curso-actual" required placeholder="Ej: 2º Bachillerato, 1º Medicina"></div>
+      <div class="form-group"><label>Centro actual</label><input type="text" id="bec-centro-actual" placeholder="Nombre del centro educativo"></div>
+      <div class="form-group"><label>Curso que va a estudiar</label><input type="text" id="bec-curso-siguiente" placeholder="Ej: 1º Grado en Derecho"></div>
+      <div class="form-group"><label>Centro / Universidad siguiente</label><input type="text" id="bec-centro-siguiente" placeholder="Nombre del centro o universidad"></div>
+      <div class="form-group"><label>Localidad del centro</label><input type="text" id="bec-localidad-centro"></div>
+
+      <div class="form-section">Unidad familiar — Padre</div>
+      <div class="form-group"><label>Nombre padre/tutor</label><input type="text" id="bec-padre-nombre"></div>
+      <div class="form-group"><label>DNI padre/tutor</label><input type="text" id="bec-padre-dni"></div>
+      <div class="form-group"><label>Fecha caducidad DNI padre</label><input type="date" id="bec-padre-vd"></div>
+      <div class="form-group"><label>Nº soporte DNI padre</label><input type="text" id="bec-padre-soporte"></div>
+      <div class="form-group"><label>Trabajo / Empresa padre</label><input type="text" id="bec-padre-trabajo"></div>
+
+      <div class="form-section">Unidad familiar — Madre</div>
+      <div class="form-group"><label>Nombre madre/tutora</label><input type="text" id="bec-madre-nombre"></div>
+      <div class="form-group"><label>DNI madre/tutora</label><input type="text" id="bec-madre-dni"></div>
+      <div class="form-group"><label>Fecha caducidad DNI madre</label><input type="date" id="bec-madre-vd"></div>
+      <div class="form-group"><label>Nº soporte DNI madre</label><input type="text" id="bec-madre-soporte"></div>
+      <div class="form-group"><label>Trabajo / Empresa madre</label><input type="text" id="bec-madre-trabajo"></div>
+
+      <div class="form-section">Hermanos (estudios)</div>
+      <div class="form-group full"><label>Datos de hermanos (nombre, estudios, centro)</label><textarea id="bec-hermanos" placeholder="Ej: Juan García — 4º ESO — IES Olula&#10;María García — 2º Grado Enfermería — UGR Granada"></textarea></div>
+
+      <div class="form-section">Económico y estado</div>
+      <div class="form-group"><label>Año campaña</label><input type="text" id="bec-anio-campana" placeholder="Ej: 2026"></div>
+      <div class="form-group"><label>Fecha inicio tramitación</label><input type="date" id="bec-fecha-inicio"></div>
+      <div class="form-group"><label>Precio cobrado (€)</label><input type="number" step="0.01" id="bec-precio" value="0"></div>
+      <div class="form-group"><label>Fecha cobro</label><input type="date" id="bec-fecha-cobro"></div>
+      <div class="form-group"><label>Nº Recibo / Referencia</label><input type="text" id="bec-recibo" placeholder="Ej: REC-2026-001"></div>
+      <div class="form-group"><label>Estado *</label>
+        <select id="bec-estado">
+          <option value="pte_avisar">⏳ Pendiente avisar</option>
+          <option value="avisado">📞 Avisado</option>
+          <option value="en_tramite">📄 En trámite</option>
+          <option value="tramitado">✅ Tramitado</option>
+          <option value="cobrado">💶 Cobrado</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Estado facturación</label>
+        <select id="bec-facturacion"><option value="en_tramite">⏳ En trámite</option><option value="pte_facturar">🔔 Pte. facturar</option><option value="facturado">✅ Facturado</option></select>
+      </div>
+      <div class="form-group full"><label>Observaciones</label><textarea id="bec-obs"></textarea></div>
+    </div>
+    <div class="btn-row">
+      <button type="button" class="btn btn-secondary" onclick="closeModal('modal-beca')">Cancelar</button>
+      <button type="submit" class="btn btn-primary">💾 Guardar</button>
+    </div>
+  </form>
+</div></div>
+
+<!-- ══ MODAL DETALLE ══ -->
+<div class="modal-overlay" id="modal-detalle">
+<div class="modal" style="max-width:820px">
+  <div class="modal-title"><span>Detalle</span><button class="modal-close" onclick="closeModal('modal-detalle')">&times;</button></div>
+  <div id="detalle-content"></div>
+</div></div>
+
+<!-- ══ MODAL CONFIG ══ -->
+<div class="modal-overlay" id="modal-config">
+<div class="modal" style="max-width:580px">
+  <div class="modal-title"><span>⚙️ Configuración</span><button class="modal-close" onclick="closeModal('modal-config')">&times;</button></div>
+  <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:14px">
+    <label style="font-size:11px;font-weight:600;color:var(--text-dim);text-transform:uppercase">URL Apps Script Google Sheets</label>
+    <input type="text" id="cfg-url" placeholder="https://script.google.com/macros/s/.../exec" style="padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif">
+  </div>
+  <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:14px">
+    <label style="font-size:11px;font-weight:600;color:var(--text-dim);text-transform:uppercase">Ruta base carpetas</label>
+    <input type="text" id="cfg-ruta" placeholder="\\PACO-HP\Users\usuario\Documents\TRABAJOS" style="padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif">
+  </div>
+  <p style="color:var(--text-muted);font-size:11px;margin-bottom:14px">Pestañas Sheets necesarias: <strong>FiscalExp · Rentas · Becas</strong> + nombre campaña (ej: <strong>Rentas2026</strong>)</p>
+  <div class="btn-row"><button class="btn btn-primary" onclick="saveConfig()">💾 Guardar</button></div>
+</div></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════
+// DATOS
+// ═══════════════════════════════════════════
+let D = {
+  fiscal: [],
+  rentas: {},
+  becas: {},
+  seguimientoBecas: [],
+  config: { sheetsUrl: '', rutaBase: '' }
+};
+const LS_KEY = 'gestoria_fiscal_rentas_v1';
+let _syncEnabled = true;
+let campanaRentas = String(new Date().getFullYear());
+let campanaBecas = String(new Date().getFullYear());
+
+function save() {
+  localStorage.setItem(LS_KEY, JSON.stringify(D));
+  if (_syncEnabled && D.config.sheetsUrl) syncToSheets(true);
+}
+function load() {
+  try { const s = localStorage.getItem(LS_KEY); if (s) D = { ...D, ...JSON.parse(s) }; } catch(e) {}
+  if (!D.fiscal) D.fiscal = [];
+  if (!D.rentas) D.rentas = {};
+  if (!D.becas) D.becas = {};
+  if (!D.seguimientoBecas) D.seguimientoBecas = [];
+  // Crear campaña actual si no existe
+  if (!D.rentas[campanaRentas]) D.rentas[campanaRentas] = [];
+  if (!D.becas[campanaBecas]) D.becas[campanaBecas] = [];
+}
+
+// ═══════════════════════════════════════════
+// BANNER / INIT
+// ═══════════════════════════════════════════
+function mostrarBanner(msg) {
+  let b = document.getElementById('_banner');
+  if (!b) { b = document.createElement('div'); b.id = '_banner'; b.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:var(--accent);color:#fff;text-align:center;padding:11px;font-size:13px;font-weight:600;font-family:DM Sans,sans-serif'; document.body.prepend(b); }
+  b.textContent = msg;
+}
+function ocultarBanner() { const b = document.getElementById('_banner'); if (b) b.remove(); }
+
+async function init() {
+  load();
+  if (D.config.sheetsUrl) {
+    mostrarBanner('⏳ Cargando datos desde Google Sheets...');
+    try { await syncFromSheets(true); ocultarBanner(); }
+    catch(e) { ocultarBanner(); showToast('⚠️ Sin conexión. Datos locales.', 'error'); renderAll(); }
+  } else { renderAll(); }
+}
+
+// ═══════════════════════════════════════════
+// NAV
+// ═══════════════════════════════════════════
+function showPanel(name, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  if (btn) btn.classList.add('active');
+  renderAll();
+}
+function openModal(id) { document.getElementById(id).classList.add('active'); }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+function today() { return new Date().toISOString().split('T')[0]; }
+
+// ═══════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════
+function fmtDate(s) {
+  if (!s || s === '-') return '-';
+  const p = String(s).substring(0,10).split('-');
+  if (p.length !== 3) return s;
+  return p[2]+'/'+p[1]+'/'+p[0];
+}
+function daysDiff(s) {
+  if (!s) return null;
+  const p = String(s).substring(0,10).split('-');
+  if (p.length !== 3) return null;
+  const t = new Date(parseInt(p[0]),parseInt(p[1])-1,parseInt(p[2]));
+  const n = new Date(); n.setHours(0,0,0,0);
+  return Math.ceil((t-n)/864e5);
+}
+function fmtMoney(n) { return (parseFloat(n)||0).toLocaleString('es-ES',{style:'currency',currency:'EUR'}); }
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast '+(type||''); t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+const ESTADO_BADGE = {
+  'PENDIENTE':'b-orange','SOLICITADO':'b-blue','FINALIZADO':'b-green','DENEGADO':'b-red',
+  'pte_avisar':'b-orange','avisado':'b-blue','en_tramite':'b-purple','tramitado':'b-teal','cobrado':'b-green'
+};
+const ESTADO_TEXT = {
+  'PENDIENTE':'Pendiente','SOLICITADO':'Solicitado','FINALIZADO':'Finalizado','DENEGADO':'Denegado',
+  'pte_avisar':'⏳ Pte. avisar','avisado':'📞 Avisado','en_tramite':'📄 En trámite','tramitado':'✅ Tramitado','cobrado':'💶 Cobrado'
+};
+const FAC_BADGE = {'en_tramite':'b-gray','pte_facturar':'b-gold','facturado':'b-green'};
+const FAC_TEXT = {'en_tramite':'⏳ En trámite','pte_facturar':'🔔 Pte. facturar','facturado':'✅ Facturado'};
+
+// ═══════════════════════════════════════════
+// RENDER ALL
+// ═══════════════════════════════════════════
+function renderAll() {
+  renderDashboard();
+  renderFiscalStats(); renderFiscal();
+  renderCampanas('rentas'); renderRentasStats(); renderRentas();
+  renderCampanas('becas'); renderBecasStats(); renderBecas();
+  renderCampanasSeg(); renderSeguimiento();
+  renderFacturacion();
+}
+
+// ═══════════════════════════════════════════
+// FISCAL
+// ═══════════════════════════════════════════
+function renderFiscalStats() {
+  const total=D.fiscal.length, activos=D.fiscal.filter(e=>e.estado==='PENDIENTE'||e.estado==='SOLICITADO').length;
+  const pte=D.fiscal.filter(e=>e.facturacion==='pte_facturar').length;
+  const urgentes=D.fiscal.filter(e=>{ const d=daysDiff(e.fechaLimite); return d!==null&&d>=0&&d<=15; }).length;
+  document.getElementById('fiscal-stats').innerHTML=`
+    <div class="stat-card"><div class="stat-number">${total}</div><div class="stat-label">Total</div></div>
+    <div class="stat-card"><div class="stat-number" style="color:var(--orange)">${activos}</div><div class="stat-label">Activos</div></div>
+    <div class="stat-card"><div class="stat-number" style="color:var(--gold)">${pte}</div><div class="stat-label">Pte. facturar</div></div>
+    <div class="stat-card"><div class="stat-number" style="color:var(--red)">${urgentes}</div><div class="stat-label">Vencen ≤15d</div></div>`;
+}
+
+function renderFiscal() {
+  const s=(document.getElementById('fiscal-search')?.value||'').toLowerCase();
+  const fe=document.getElementById('fiscal-fest')?.value||'';
+  const ff=document.getElementById('fiscal-ffac')?.value||'';
+  let list=D.fiscal.filter(e=>{
+    const ms=!s||[e.numero,e.cliente,e.asunto,e.tipo].join(' ').toLowerCase().includes(s);
+    return ms&&(!fe||e.estado===fe)&&(!ff||e.facturacion===ff);
+  }).sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+  const tb=document.getElementById('fiscal-tbody');
+  if(!list.length){tb.innerHTML=`<tr><td colspan="10" style="text-align:center;padding:30px;color:var(--text-muted)">${D.fiscal.length?'Sin resultados':'Crea el primer expediente'}</td></tr>`;return;}
+  tb.innerHTML=list.map(e=>{
+    const dias=e.fechaLimite?daysDiff(e.fechaLimite):null;
+    const diasHTML=dias!==null?`<span style="font-size:11px;font-weight:700;padding:2px 7px;border-radius:4px;background:${dias<=7?'var(--red-dim)':dias<=15?'var(--orange-dim)':'var(--green-dim)'};color:${dias<=7?'var(--red)':dias<=15?'var(--orange)':'var(--green)'}">${fmtDate(e.fechaLimite)} (${dias}d)</span>`:'-';
+    return `<tr onclick="showDetalleFiscal('${e.id}')">
+      <td><strong style="color:var(--accent)">${e.numero}</strong></td>
+      <td>${e.cliente}</td>
+      <td style="font-size:12px;color:var(--text-dim)">${e.tipo||'-'}</td>
+      <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e.asunto||'-'}</td>
+      <td><span class="badge ${ESTADO_BADGE[e.estado]||'b-gray'}">${ESTADO_TEXT[e.estado]||e.estado}</span></td>
+      <td>${diasHTML}</td>
+      <td style="font-weight:600;color:var(--green)">${fmtMoney(e.cobrado)}</td>
+      <td style="font-size:12px;color:var(--text-dim)">${e.recibo||'-'}</td>
+      <td><span class="badge ${FAC_BADGE[e.facturacion]||'b-gray'}">${FAC_TEXT[e.facturacion]||'-'}</span></td>
+      <td onclick="event.stopPropagation()"><button class="btn btn-secondary btn-sm" onclick="copiarRutaFiscal('${e.id}')" title="Copiar ruta carpeta">📂</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function calcFisPendiente() {
+  const t=parseFloat(document.getElementById('fis-total').value)||0;
+  const p=parseFloat(document.getElementById('fis-provision').value)||0;
+  const o=parseFloat(document.getElementById('fis-otros').value)||0;
+  const c=parseFloat(document.getElementById('fis-cobrado').value)||0;
+  document.getElementById('fis-pendiente').value=(t-p-o-c).toFixed(2);
+}
+
+function openModalFiscal(id) {
+  document.getElementById('form-fiscal').reset();
+  document.getElementById('fis-id').value='';
+  document.getElementById('modal-fiscal-title').textContent='Nuevo expediente fiscal';
+  document.getElementById('fis-pendiente').value='0';
+  if(id){
+    const e=D.fiscal.find(x=>x.id===id); if(!e)return;
+    document.getElementById('fis-id').value=e.id;
+    document.getElementById('modal-fiscal-title').textContent='Editar '+e.numero;
+    const campos=['numero','cliente','dni','telefono','email','localidad','tipo','asunto','resolucion','recibo','obs'];
+    campos.forEach(c=>{ const el=document.getElementById('fis-'+c); if(el) el.value=e[c]||''; });
+    document.getElementById('fis-cert-digital').value=e.certDigital||'';
+    document.getElementById('fis-estado').value=e.estado||'PENDIENTE';
+    document.getElementById('fis-facturacion').value=e.facturacion||'en_tramite';
+    document.getElementById('fis-fecha-inicio').value=e.fechaInicio||'';
+    document.getElementById('fis-fecha-limite').value=e.fechaLimite||'';
+    document.getElementById('fis-total').value=e.total||0;
+    document.getElementById('fis-provision').value=e.provision||0;
+    document.getElementById('fis-fecha-prov').value=e.fechaProvision||'';
+    document.getElementById('fis-otros').value=e.otrosPagos||0;
+    document.getElementById('fis-fecha-otros').value=e.fechaOtros||'';
+    document.getElementById('fis-cobrado').value=e.cobrado||0;
+    document.getElementById('fis-fecha-cobro').value=e.fechaCobro||'';
+    document.getElementById('fis-pendiente').value=e.pendiente||0;
+  }
+  closeModal('modal-detalle'); openModal('modal-fiscal');
+}
+
+function saveFiscal(e) {
+  e.preventDefault();
+  const id=document.getElementById('fis-id').value;
+  const t=parseFloat(document.getElementById('fis-total').value)||0;
+  const p=parseFloat(document.getElementById('fis-provision').value)||0;
+  const o=parseFloat(document.getElementById('fis-otros').value)||0;
+  const c=parseFloat(document.getElementById('fis-cobrado').value)||0;
+  const exp={
+    id:id||'FIS-'+Date.now(),
+    numero:document.getElementById('fis-numero').value.trim(),
+    cliente:document.getElementById('fis-cliente').value.trim(),
+    dni:document.getElementById('fis-dni').value.trim(),
+    telefono:document.getElementById('fis-telefono').value.trim(),
+    email:document.getElementById('fis-email').value.trim(),
+    localidad:document.getElementById('fis-localidad').value.trim(),
+    certDigital:document.getElementById('fis-cert-digital').value,
+    tipo:document.getElementById('fis-tipo').value,
+    asunto:document.getElementById('fis-asunto').value.trim(),
+    fechaInicio:document.getElementById('fis-fecha-inicio').value,
+    fechaLimite:document.getElementById('fis-fecha-limite').value,
+    estado:document.getElementById('fis-estado').value,
+    resolucion:document.getElementById('fis-resolucion').value.trim(),
+    facturacion:document.getElementById('fis-facturacion').value,
+    total:t, provision:p, fechaProvision:document.getElementById('fis-fecha-prov').value,
+    otrosPagos:o, fechaOtros:document.getElementById('fis-fecha-otros').value,
+    cobrado:c, fechaCobro:document.getElementById('fis-fecha-cobro').value,
+    recibo:document.getElementById('fis-recibo').value.trim(),
+    pendiente:t-p-o-c,
+    obs:document.getElementById('fis-obs').value.trim(),
+    createdAt:id?(D.fiscal.find(x=>x.id===id)?.createdAt||new Date().toISOString()):new Date().toISOString()
+  };
+  if(id){const i=D.fiscal.findIndex(x=>x.id===id);if(i>=0)D.fiscal[i]=exp;}
+  else D.fiscal.push(exp);
+  save(); closeModal('modal-fiscal'); renderAll();
+  showToast(id?'Expediente actualizado':'Expediente creado ✅');
+}
+
+function showDetalleFiscal(id) {
+  const e=D.fiscal.find(x=>x.id===id); if(!e)return;
+  let h=`<div class="detail-header">
+    <div><div class="detail-exp-num">${e.numero}</div><div class="detail-client">${e.cliente}${e.dni?' · '+e.dni:''}</div></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <span class="badge ${ESTADO_BADGE[e.estado]||'b-gray'}">${ESTADO_TEXT[e.estado]||e.estado}</span>
+      <span class="badge ${FAC_BADGE[e.facturacion]||'b-gray'}">${FAC_TEXT[e.facturacion]||'-'}</span>
+      <button class="btn btn-secondary btn-sm" onclick="openModalFiscal('${e.id}')">✏️ Editar</button>
+      <button class="btn btn-danger btn-sm" onclick="eliminarFiscal('${e.id}')">🗑️</button>
+      <button class="btn btn-secondary btn-sm" onclick="copiarRutaFiscal('${e.id}')">📂</button>
+    </div></div>
+  <div class="info-grid">
+    <div class="info-item"><label>Tipo</label><span>${e.tipo||'-'}</span></div>
+    <div class="info-item"><label>Fecha inicio</label><span>${fmtDate(e.fechaInicio)}</span></div>
+    <div class="info-item"><label>Fecha límite</label><span>${fmtDate(e.fechaLimite)}</span></div>
+    <div class="info-item"><label>Resolución</label><span>${e.resolucion||'-'}</span></div>
+    <div class="info-item"><label>Teléfono</label><span>${e.telefono||'-'}</span></div>
+    <div class="info-item"><label>Email</label><span>${e.email||'-'}</span></div>
+    <div class="info-item"><label>Cert. digital</label><span>${{si:'✅ Sí',no:'❌ No',caducado:'⚠️ Caducado'}[e.certDigital]||'No consta'}</span></div>
+  </div>`;
+  if(e.asunto) h+=`<div style="margin-bottom:14px"><label style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">Asunto</label><p style="margin-top:3px;font-size:14px">${e.asunto}</p></div>`;
+  h+=`<div class="sdiv"></div><div class="stitle">💶 Económico</div>
+  <div class="info-grid">
+    <div class="info-item"><label>Total</label><span style="font-weight:700">${fmtMoney(e.total)}</span></div>
+    <div class="info-item"><label>Provisión</label><span>${fmtMoney(e.provision)}${e.fechaProvision?' · '+fmtDate(e.fechaProvision):''}</span></div>
+    <div class="info-item"><label>Otros pagos</label><span>${fmtMoney(e.otrosPagos)}${e.fechaOtros?' · '+fmtDate(e.fechaOtros):''}</span></div>
+    <div class="info-item"><label>Cobrado</label><span style="color:var(--green);font-weight:700">${fmtMoney(e.cobrado)}${e.fechaCobro?' · '+fmtDate(e.fechaCobro):''}</span></div>
+    <div class="info-item"><label>Pendiente</label><span style="color:${parseFloat(e.pendiente)>0?'var(--red)':'var(--green)'};font-weight:700">${fmtMoney(e.pendiente)}</span></div>
+    <div class="info-item"><label>Nº Recibo</label><span>${e.recibo||'-'}</span></div>
+  </div>`;
+  if(e.obs) h+=`<div class="sdiv"></div><div class="stitle">📝 Observaciones</div><p style="font-size:13px;color:var(--text-dim);line-height:1.6">${e.obs}</p>`;
+  if(e.facturacion==='pte_facturar') h+=`<div class="sdiv"></div><div style="text-align:center"><button class="btn btn-primary" onclick="cambiarFac('fiscal',null,'${e.id}','facturado');closeModal('modal-detalle')">✅ Marcar como facturado</button></div>`;
+  document.getElementById('detalle-content').innerHTML=h;
+  openModal('modal-detalle');
+}
+
+function eliminarFiscal(id) {
+  if(!confirm('¿Eliminar?'))return;
+  D.fiscal=D.fiscal.filter(x=>x.id!==id);
+  save(); closeModal('modal-detalle'); renderAll(); showToast('Eliminado');
+}
+
+// ═══════════════════════════════════════════
+// CAMPAÑAS
+// ═══════════════════════════════════════════
+function getCampanas(tipo) {
+  const obj = tipo==='rentas'?D.rentas:D.becas;
+  return Object.keys(obj).sort((a,b)=>parseInt(b)-parseInt(a));
+}
+
+function renderCampanas(tipo) {
+  const campanas=getCampanas(tipo);
+  const activa=tipo==='rentas'?campanaRentas:campanaBecas;
+  const el=document.getElementById(tipo+'-campanas');
+  let html=campanas.map(c=>`<button class="campana-btn${c===activa?' active':''}" onclick="setCampana('${tipo}','${c}')">${c}</button>`).join('');
+  html+=`<button class="nueva-campana" onclick="nuevaCampana('${tipo}')">+ Nueva campaña</button>`;
+  el.innerHTML=html;
+}
+
+function setCampana(tipo, campana) {
+  if(tipo==='rentas') campanaRentas=campana;
+  else campanaBecas=campana;
+  renderCampanas(tipo);
+  if(tipo==='rentas'){renderRentasStats();renderRentas();}
+  else{renderBecasStats();renderBecas();}
+}
+
+function nuevaCampana(tipo) {
+  const anio=prompt('Año de la nueva campaña:', new Date().getFullYear()+1);
+  if(!anio||isNaN(parseInt(anio)))return;
+  const k=String(parseInt(anio));
+  if(tipo==='rentas'){ if(!D.rentas[k])D.rentas[k]=[]; campanaRentas=k; }
+  else{ if(!D.becas[k])D.becas[k]=[]; campanaBecas=k; }
+  save(); renderCampanas(tipo);
+  if(tipo==='rentas'){renderRentasStats();renderRentas();}
+  else{renderBecasStats();renderBecas();}
+}
+
+// ═══════════════════════════════════════════
+// RENTAS
+// ═══════════════════════════════════════════
+function getRentas() { return D.rentas[campanaRentas]||[]; }
+
+function renderRentasStats() {
+  const list=getRentas();
+  const total=list.length, cobrado=list.filter(r=>r.estado==='cobrado').length;
+  const pte=list.filter(r=>r.estado==='pte_avisar').length, tramite=list.filter(r=>r.estado==='en_tramite'||r.estado==='tramitado').length;
+  document.getElementById('rentas-stats').innerHTML=`
+    <div class="stat-card"><div class="stat-number">${total}</div><div class="stat-label">Campaña ${campanaRentas}</div></div>
+    <div class="stat-card"><div class="stat-number" style="color:var(--orange)">${pte}</div><div class="stat-label">Pte. avisar</div></div>
+    <div class="stat-card"><div class="stat-number" style="color:var(--blue)">${tramite}</div><div class="stat-label">En trámite</div></div>
+    <div class="stat-card"><div class="stat-number" style="color:var(--green)">${cobrado}</div><div class="stat-label">Cobradas</div></div>`;
+}
+
+function renderRentas() {
+  const s=(document.getElementById('rentas-search')?.value||'').toLowerCase();
+  const fe=document.getElementById('rentas-fest')?.value||'';
+  let list=getRentas().filter(r=>{
+    const ms=!s||[r.nombre,r.dni,r.parejaNombre].join(' ').toLowerCase().includes(s);
+    return ms&&(!fe||r.estado===fe);
+  });
+  const tb=document.getElementById('rentas-tbody');
+  if(!list.length){tb.innerHTML=`<tr><td colspan="9" style="text-align:center;padding:30px;color:var(--text-muted)">${getRentas().length?'Sin resultados':'Añade la primera renta de '+campanaRentas}</td></tr>`;return;}
+  tb.innerHTML=list.map(r=>`<tr onclick="showDetalleRenta('${r.id}')">
+    <td><strong>${r.nombre}</strong></td>
+    <td>${r.dni||'-'}</td>
+    <td style="font-size:12px;color:${hayVdDniProximo(r.vdDni)?'var(--red)':'var(--text-dim)'}">${fmtDate(r.vdDni)}</td>
+    <td>${r.parejaNombre||'-'}</td>
+    <td style="font-size:12px;color:var(--text-dim)">${r.ref||'-'}</td>
+    <td style="font-weight:600">${fmtMoney(r.precio)}</td>
+    <td style="font-size:12px;color:var(--text-dim)">${r.recibo||'-'}</td>
+    <td><span class="badge ${ESTADO_BADGE[r.estado]||'b-gray'}">${ESTADO_TEXT[r.estado]||r.estado}</span></td>
+    <td onclick="event.stopPropagation()">
+      <button class="btn btn-secondary btn-sm" onclick="copiarRutasRenta('${r.id}')" title="Copiar rutas carpetas">📂</button>
+      <button class="btn btn-secondary btn-sm" onclick="copiarNombreArchivoRenta('${r.id}','renta')" title="Copiar nombre archivo Renta">📄</button>
+      <button class="btn btn-secondary btn-sm" onclick="copiarNombreArchivoRenta('${r.id}','datos')" title="Copiar nombre archivo Datos Fiscales">📊</button>
+    </td>
+  </tr>`).join('');
+}
+
+function hayVdDniProximo(fecha) {
+  if(!fecha) return false;
+  const d=daysDiff(fecha);
+  return d!==null && d>=0 && d<=60;
+}
+
+function openModalRenta(id) {
+  document.getElementById('form-renta').reset();
+  document.getElementById('ren-id').value='';
+  document.getElementById('ren-campana').value=campanaRentas;
+  document.getElementById('modal-renta-title').textContent='Nueva renta '+campanaRentas;
+  ['ren-invalidez','ren-fam-numerosa','ren-extranjero','ren-seguros','ren-donaciones','ren-patrimonio'].forEach(id=>{ document.getElementById(id).checked=false; });
+  if(id){
+    const r=getRentas().find(x=>x.id===id); if(!r)return;
+    document.getElementById('ren-id').value=r.id;
+    document.getElementById('modal-renta-title').textContent='Editar renta — '+r.nombre;
+    ['nombre','dni','ref','telefono','email','parejaNombre','parejaDni','parejaRef','obs','recibo'].forEach(c=>{const el=document.getElementById('ren-'+c.replace(/([A-Z])/g,m=>'-'+m.toLowerCase()));if(el)el.value=r[c]||'';});
+    document.getElementById('ren-vd-dni').value=r.vdDni||'';
+    document.getElementById('ren-pareja-vd-dni').value=r.parejaVdDni||'';
+    document.getElementById('ren-precio').value=r.precio||0;
+    document.getElementById('ren-fecha-cobro').value=r.fechaCobro||'';
+    document.getElementById('ren-estado').value=r.estado||'pte_avisar';
+    document.getElementById('ren-facturacion').value=r.facturacion||'en_tramite';
+    if(r.invalidez) document.getElementById('ren-invalidez').checked=true;
+    if(r.famNumerosa) document.getElementById('ren-fam-numerosa').checked=true;
+    if(r.extranjero) document.getElementById('ren-extranjero').checked=true;
+    if(r.seguros) document.getElementById('ren-seguros').checked=true;
+    if(r.donaciones) document.getElementById('ren-donaciones').checked=true;
+    if(r.patrimonio) document.getElementById('ren-patrimonio').checked=true;
+  }
+  closeModal('modal-detalle'); openModal('modal-renta');
+}
+
+function saveRenta(e) {
+  e.preventDefault();
+  const id=document.getElementById('ren-id').value;
+  const campana=document.getElementById('ren-campana').value||campanaRentas;
+  const r={
+    id:id||'REN-'+Date.now(),
+    nombre:document.getElementById('ren-nombre').value.trim(),
+    dni:document.getElementById('ren-dni').value.trim(),
+    vdDni:document.getElementById('ren-vd-dni').value,
+    ref:document.getElementById('ren-ref').value.trim(),
+    telefono:document.getElementById('ren-telefono').value.trim(),
+    email:document.getElementById('ren-email').value.trim(),
+    parejaNombre:document.getElementById('ren-pareja-nombre').value.trim(),
+    parejaDni:document.getElementById('ren-pareja-dni').value.trim(),
+    parejaVdDni:document.getElementById('ren-pareja-vd-dni').value,
+    parejaRef:document.getElementById('ren-pareja-ref').value.trim(),
+    invalidez:document.getElementById('ren-invalidez').checked,
+    famNumerosa:document.getElementById('ren-fam-numerosa').checked,
+    extranjero:document.getElementById('ren-extranjero').checked,
+    seguros:document.getElementById('ren-seguros').checked,
+    donaciones:document.getElementById('ren-donaciones').checked,
+    patrimonio:document.getElementById('ren-patrimonio').checked,
+    obs:document.getElementById('ren-obs').value.trim(),
+    precio:parseFloat(document.getElementById('ren-precio').value)||0,
+    fechaCobro:document.getElementById('ren-fecha-cobro').value,
+    recibo:document.getElementById('ren-recibo').value.trim(),
+    estado:document.getElementById('ren-estado').value,
+    facturacion:document.getElementById('ren-facturacion').value,
+    createdAt:id?(getRentas().find(x=>x.id===id)?.createdAt||new Date().toISOString()):new Date().toISOString()
+  };
+  if(!D.rentas[campana]) D.rentas[campana]=[];
+  if(id){const i=D.rentas[campana].findIndex(x=>x.id===id);if(i>=0)D.rentas[campana][i]=r;}
+  else D.rentas[campana].push(r);
+  save(); closeModal('modal-renta'); renderAll();
+  showToast(id?'Renta actualizada':'Renta añadida ✅');
+}
+
+function showDetalleRenta(id) {
+  const r=getRentas().find(x=>x.id===id); if(!r)return;
+  const flags=[r.invalidez&&'Invalidez',r.famNumerosa&&'Familia numerosa',r.extranjero&&'Rentas extranjero',r.seguros&&'Seguros privados',r.donaciones&&'Donaciones',r.patrimonio&&'Variación patrimonial'].filter(Boolean);
+  let h=`<div class="detail-header">
+    <div><div class="detail-exp-num">${r.nombre}</div><div class="detail-client">${r.dni||''}${r.parejaNombre?' + '+r.parejaNombre:''} · Campaña ${campanaRentas}</div></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <span class="badge ${ESTADO_BADGE[r.estado]||'b-gray'}">${ESTADO_TEXT[r.estado]||r.estado}</span>
+      <button class="btn btn-secondary btn-sm" onclick="openModalRenta('${r.id}')">✏️ Editar</button>
+      <button class="btn btn-danger btn-sm" onclick="eliminarRenta('${r.id}')">🗑️</button>
+      <button class="btn btn-secondary btn-sm" onclick="copiarRutasRenta('${r.id}')">📂 Carpetas</button>
+      <button class="btn btn-secondary btn-sm" onclick="copiarNombreArchivoRenta('${r.id}','renta')" title="Copiar nombre archivo Renta">📄 Renta</button>
+      <button class="btn btn-secondary btn-sm" onclick="copiarNombreArchivoRenta('${r.id}','datos')" title="Copiar nombre Datos Fiscales">📊 DF</button>
+    </div></div>
+  <div class="info-grid">
+    <div class="info-item"><label>DNI titular</label><span>${r.dni||'-'}</span></div>
+    <div class="info-item"><label>Validez DNI</label><span style="color:${hayVdDniProximo(r.vdDni)?'var(--red)':'inherit'}">${fmtDate(r.vdDni)}</span></div>
+    <div class="info-item"><label>Ref. fiscal</label><span>${r.ref||'-'}</span></div>
+    <div class="info-item"><label>Teléfono</label><span>${r.telefono||'-'}</span></div>
+    <div class="info-item"><label>Email</label><span>${r.email||'-'}</span></div>
+    <div class="info-item"><label>Precio</label><span style="font-weight:700">${fmtMoney(r.precio)}</span></div>
+  </div>`;
+  if(r.parejaNombre){
+    h+=`<div class="sdiv"></div><div class="stitle">👫 Pareja (declaración conjunta)</div>
+    <div class="info-grid">
+      <div class="info-item"><label>Nombre</label><span>${r.parejaNombre}</span></div>
+      <div class="info-item"><label>DNI pareja</label><span>${r.parejaDni||'-'}</span></div>
+      <div class="info-item"><label>Validez DNI pareja</label><span style="color:${hayVdDniProximo(r.parejaVdDni)?'var(--red)':'inherit'}">${fmtDate(r.parejaVdDni)}</span></div>
+      <div class="info-item"><label>Ref. fiscal pareja</label><span>${r.parejaRef||'-'}</span></div>
+    </div>`;
+  }
+  if(flags.length){
+    h+=`<div class="sdiv"></div><div class="stitle">⚠️ Circunstancias especiales</div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px">${flags.map(f=>`<span class="badge b-orange">${f}</span>`).join('')}</div>`;
+  }
+  if(r.obs) h+=`<p style="font-size:13px;color:var(--text-dim);line-height:1.6">${r.obs}</p>`;
+  h+=`<div class="sdiv"></div><div class="stitle">💶 Cobro</div>
+  <div class="info-grid">
+    <div class="info-item"><label>Precio</label><span style="font-weight:700">${fmtMoney(r.precio)}</span></div>
+    <div class="info-item"><label>Fecha cobro</label><span>${fmtDate(r.fechaCobro)}</span></div>
+    <div class="info-item"><label>Nº Recibo</label><span>${r.recibo||'-'}</span></div>
+    <div class="info-item"><label>Facturación</label><span><span class="badge ${FAC_BADGE[r.facturacion]||'b-gray'}">${FAC_TEXT[r.facturacion]||'-'}</span></span></div>
+  </div>`;
+  document.getElementById('detalle-content').innerHTML=h;
+  openModal('modal-detalle');
+}
+
+function eliminarRenta(id) {
+  if(!confirm('¿Eliminar esta renta?'))return;
+  D.rentas[campanaRentas]=D.rentas[campanaRentas].filter(x=>x.id!==id);
+  save(); closeModal('modal-detalle'); renderAll(); showToast('Eliminado');
+}
+
+function copiarRutasRenta(id) {
+  const r=getRentas().find(x=>x.id===id); if(!r)return;
+  const base=D.config.rutaBase||'\\\\PACO-HP\\Users\\usuario\\Documents\\TRABAJOS';
+  const nombre=r.nombre.replace(/[<>:"/\\|?*]/g,'').trim();
+  const nombrePareja=r.parejaNombre?r.parejaNombre.replace(/[<>:"/\\|?*]/g,'').trim():'';
+  const sufijo=nombrePareja?` ${nombrePareja}`:'';
+  const rutaRenta=`${base}\\Rentas ${campanaRentas}\\Renta ${nombre}${sufijo}`;
+  const rutaDatos=`${base}\\Datos Fiscales ${campanaRentas}\\DF ${nombre}${sufijo}`;
+  const texto=`📁 RENTA:\n${rutaRenta}\n\n📁 DATOS FISCALES:\n${rutaDatos}`;
+  navigator.clipboard.writeText(texto).then(()=>{
+    showToast('📂 Dos rutas copiadas — pégalas en el Explorador','info');
+  }).catch(()=>{ prompt('Rutas de carpetas:', texto); });
+}
+
+// ═══════════════════════════════════════════
+// BECAS
+// ═══════════════════════════════════════════
+function getBecas() { return D.becas[campanaBecas]||[]; }
+
+function renderBecasStats() {
+  const list=getBecas();
+  const total=list.length, cobrado=list.filter(b=>b.estado==='cobrado').length;
+  const pte=list.filter(b=>b.estado==='pte_avisar').length, tramite=list.filter(b=>b.estado==='en_tramite'||b.estado==='tramitado').length;
+  document.getElementById('becas-stats').innerHTML=`
+    <div class="stat-card"><div class="stat-number">${total}</div><div class="stat-label">Campaña ${campanaBecas}</div></div>
+    <div class="stat-card"><div class="stat-number" style="color:var(--orange)">${pte}</div><div class="stat-label">Pte. avisar</div></div>
+    <div class="stat-card"><div class="stat-number" style="color:var(--blue)">${tramite}</div><div class="stat-label">En trámite</div></div>
+    <div class="stat-card"><div class="stat-number" style="color:var(--green)">${cobrado}</div><div class="stat-label">Cobradas</div></div>`;
+}
+
+function renderBecas() {
+  const s=(document.getElementById('becas-search')?.value||'').toLowerCase();
+  const fe=document.getElementById('becas-fest')?.value||'';
+  let list=getBecas().filter(b=>{
+    const ms=!s||[b.alumno,b.padreNombre,b.madreNombre,b.cursoActual,b.cursoSiguiente].join(' ').toLowerCase().includes(s);
+    return ms&&(!fe||b.estado===fe);
+  });
+  const tb=document.getElementById('becas-tbody');
+  if(!list.length){tb.innerHTML=`<tr><td colspan="8" style="text-align:center;padding:30px;color:var(--text-muted)">${getBecas().length?'Sin resultados':'Añade la primera beca de '+campanaBecas}</td></tr>`;return;}
+  tb.innerHTML=list.map(b=>`<tr onclick="showDetalleBeca('${b.id}')">
+    <td><strong>${b.alumno}</strong></td>
+    <td>${b.dni||'-'}</td>
+    <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.cursoActual||'-'}</td>
+    <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.cursoSiguiente||'-'}</td>
+    <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${b.centroSiguiente||b.centroActual||'-'}</td>
+    <td style="font-weight:600">${fmtMoney(b.precio)}</td>
+    <td style="font-size:12px;color:var(--text-dim)">${b.recibo||'-'}</td>
+    <td><span class="badge ${ESTADO_BADGE[b.estado]||'b-gray'}">${ESTADO_TEXT[b.estado]||b.estado}</span></td>
+  </tr>`).join('');
+}
+
+function openModalBeca(id) {
+  document.getElementById('form-beca').reset();
+  document.getElementById('bec-id').value='';
+  document.getElementById('bec-campana').value=campanaBecas;
+  document.getElementById('modal-beca-title').textContent='Nueva beca '+campanaBecas;
+  if(id){
+    const b=getBecas().find(x=>x.id===id); if(!b)return;
+    document.getElementById('bec-id').value=b.id;
+    document.getElementById('modal-beca-title').textContent='Editar beca — '+b.alumno;
+    const campos=['alumno','dni','telefono','email','direccion','iban','cursoActual','centroActual','cursoSiguiente','centroSiguiente','localidadCentro','padreNombre','padreDni','padreTrabajo','madreNombre','madreDni','madreTrabajo','hermanos','obs','recibo'];
+    campos.forEach(c=>{ const k=c.replace(/([A-Z])/g,m=>'-'+m.toLowerCase()); const el=document.getElementById('bec-'+k); if(el) el.value=b[c]||''; });
+    document.getElementById('bec-vd-dni').value=b.vdDni||'';
+    document.getElementById('bec-padre-vd').value=b.padreVd||'';
+    document.getElementById('bec-padre-soporte').value=b.padreSoporte||'';
+    document.getElementById('bec-madre-vd').value=b.madreVd||'';
+    document.getElementById('bec-madre-soporte').value=b.madreSoporte||'';
+    document.getElementById('bec-soporte-dni').value=b.soporteDni||'';
+    document.getElementById('bec-precio').value=b.precio||0;
+    document.getElementById('bec-fecha-cobro').value=b.fechaCobro||'';
+    document.getElementById('bec-estado').value=b.estado||'pte_avisar';
+    document.getElementById('bec-facturacion').value=b.facturacion||'en_tramite';
+    document.getElementById('bec-anio-campana').value=b.anio||campana;
+    document.getElementById('bec-fecha-inicio').value=b.fechaInicio||'';
+  }
+  closeModal('modal-detalle'); openModal('modal-beca');
+}
+
+function saveBeca(e) {
+  e.preventDefault();
+  const id=document.getElementById('bec-id').value;
+  const campana=document.getElementById('bec-campana').value||campanaBecas;
+  const b={
+    id:id||'BEC-'+Date.now(),
+    alumno:document.getElementById('bec-alumno').value.trim(),
+    dni:document.getElementById('bec-dni').value.trim(),
+    vdDni:document.getElementById('bec-vd-dni').value,
+    soporteDni:document.getElementById('bec-soporte-dni').value.trim(),
+    telefono:document.getElementById('bec-telefono').value.trim(),
+    email:document.getElementById('bec-email').value.trim(),
+    direccion:document.getElementById('bec-direccion').value.trim(),
+    iban:document.getElementById('bec-iban').value.trim(),
+    cursoActual:document.getElementById('bec-curso-actual').value.trim(),
+    centroActual:document.getElementById('bec-centro-actual').value.trim(),
+    cursoSiguiente:document.getElementById('bec-curso-siguiente').value.trim(),
+    centroSiguiente:document.getElementById('bec-centro-siguiente').value.trim(),
+    localidadCentro:document.getElementById('bec-localidad-centro').value.trim(),
+    padreNombre:document.getElementById('bec-padre-nombre').value.trim(),
+    padreDni:document.getElementById('bec-padre-dni').value.trim(),
+    padreVd:document.getElementById('bec-padre-vd').value,
+    padreSoporte:document.getElementById('bec-padre-soporte').value.trim(),
+    padreTrabajo:document.getElementById('bec-padre-trabajo').value.trim(),
+    madreNombre:document.getElementById('bec-madre-nombre').value.trim(),
+    madreDni:document.getElementById('bec-madre-dni').value.trim(),
+    madreVd:document.getElementById('bec-madre-vd').value,
+    madreSoporte:document.getElementById('bec-madre-soporte').value.trim(),
+    madreTrabajo:document.getElementById('bec-madre-trabajo').value.trim(),
+    hermanos:document.getElementById('bec-hermanos').value.trim(),
+    precio:parseFloat(document.getElementById('bec-precio').value)||0,
+    fechaCobro:document.getElementById('bec-fecha-cobro').value,
+    recibo:document.getElementById('bec-recibo').value.trim(),
+    estado:document.getElementById('bec-estado').value,
+    facturacion:document.getElementById('bec-facturacion').value,
+    anio:document.getElementById('bec-anio-campana')?.value?.trim()||campana,
+    fechaInicio:document.getElementById('bec-fecha-inicio')?.value||'',
+    obs:document.getElementById('bec-obs').value.trim(),
+    createdAt:id?(getBecas().find(x=>x.id===id)?.createdAt||new Date().toISOString()):new Date().toISOString()
+  };
+  if(!D.becas[campana]) D.becas[campana]=[];
+  if(id){const i=D.becas[campana].findIndex(x=>x.id===id);if(i>=0)D.becas[campana][i]=b;}
+  else D.becas[campana].push(b);
+  save(); closeModal('modal-beca'); renderAll();
+  showToast(id?'Beca actualizada':'Beca añadida ✅');
+}
+
+function showDetalleBeca(id) {
+  const b=getBecas().find(x=>x.id===id); if(!b)return;
+  let h=`<div class="detail-header">
+    <div><div class="detail-exp-num">${b.alumno}</div><div class="detail-client">${b.cursoActual||''} · Campaña ${campanaBecas}</div></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <span class="badge ${ESTADO_BADGE[b.estado]||'b-gray'}">${ESTADO_TEXT[b.estado]||b.estado}</span>
+      <button class="btn btn-secondary btn-sm" onclick="openModalBeca('${b.id}')">✏️ Editar</button>
+      <button class="btn btn-danger btn-sm" onclick="eliminarBeca('${b.id}')">🗑️</button>
+    </div></div>
+  <div class="info-grid">
+    <div class="info-item"><label>DNI / NIE</label><span>${b.dni||'-'}</span></div>
+    <div class="info-item"><label>Caducidad DNI</label><span>${fmtDate(b.vdDni)}</span></div>
+    <div class="info-item"><label>Nº soporte</label><span>${b.soporteDni||'-'}</span></div>
+    <div class="info-item"><label>Teléfono</label><span>${b.telefono||'-'}</span></div>
+    <div class="info-item"><label>Email</label><span>${b.email||'-'}</span></div>
+    <div class="info-item"><label>IBAN</label><span>${b.iban||'-'}</span></div>
+    <div class="info-item"><label>Año campaña</label><span>${b.anio||campanaBecas}</span></div>
+    <div class="info-item"><label>Fecha inicio tramitación</label><span>${fmtDate(b.fechaInicio)}</span></div>
+    <div class="info-item"><label>Curso actual</label><span>${b.cursoActual||'-'}</span></div>
+    <div class="info-item"><label>Centro actual</label><span>${b.centroActual||'-'}</span></div>
+    <div class="info-item"><label>Próximo curso</label><span>${b.cursoSiguiente||'-'}</span></div>
+    <div class="info-item"><label>Próximo centro</label><span>${b.centroSiguiente||'-'}</span></div>
+    <div class="info-item"><label>Localidad centro</label><span>${b.localidadCentro||'-'}</span></div>
+  </div>`;
+  if(b.padreNombre||b.madreNombre){
+    h+=`<div class="sdiv"></div><div class="stitle">👨‍👩‍👧 Unidad familiar</div><div class="info-grid">`;
+    if(b.padreNombre) h+=`<div class="info-item"><label>Padre/tutor</label><span>${b.padreNombre}</span></div><div class="info-item"><label>DNI padre / caducidad</label><span>${b.padreDni||'-'} · ${fmtDate(b.padreVd)}</span></div><div class="info-item"><label>Soporte padre</label><span>${b.padreSoporte||'-'}</span></div><div class="info-item"><label>Trabajo padre</label><span>${b.padreTrabajo||'-'}</span></div>`;
+    if(b.madreNombre) h+=`<div class="info-item"><label>Madre/tutora</label><span>${b.madreNombre}</span></div><div class="info-item"><label>DNI madre / caducidad</label><span>${b.madreDni||'-'} · ${fmtDate(b.madreVd)}</span></div><div class="info-item"><label>Soporte madre</label><span>${b.madreSoporte||'-'}</span></div><div class="info-item"><label>Trabajo madre</label><span>${b.madreTrabajo||'-'}</span></div>`;
+    h+=`</div>`;
+  }
+  if(b.hermanos) h+=`<div class="sdiv"></div><div class="stitle">👫 Hermanos</div><p style="font-size:13px;color:var(--text-dim);line-height:1.8;white-space:pre-wrap">${b.hermanos}</p>`;
+  h+=`<div class="sdiv"></div><div class="stitle">💶 Cobro</div>
+  <div class="info-grid">
+    <div class="info-item"><label>Precio</label><span style="font-weight:700">${fmtMoney(b.precio)}</span></div>
+    <div class="info-item"><label>Fecha cobro</label><span>${fmtDate(b.fechaCobro)}</span></div>
+    <div class="info-item"><label>Nº Recibo</label><span>${b.recibo||'-'}</span></div>
+    <div class="info-item"><label>Facturación</label><span><span class="badge ${FAC_BADGE[b.facturacion]||'b-gray'}">${FAC_TEXT[b.facturacion]||'-'}</span></span></div>
+  </div>`;
+  if(b.obs) h+=`<div class="sdiv"></div><p style="font-size:13px;color:var(--text-dim);line-height:1.6">${b.obs}</p>`;
+  document.getElementById('detalle-content').innerHTML=h;
+  openModal('modal-detalle');
+}
+
+function eliminarBeca(id) {
+  if(!confirm('¿Eliminar?'))return;
+  D.becas[campanaBecas]=D.becas[campanaBecas].filter(x=>x.id!==id);
+  save(); closeModal('modal-detalle'); renderAll(); showToast('Eliminado');
+}
+
+// ═══════════════════════════════════════════
+// FACTURACIÓN (todas las secciones)
+// ═══════════════════════════════════════════
+function renderFacturacion() {
+  const s=(document.getElementById('fac-search')?.value||'').toLowerCase();
+  const ff=document.getElementById('fac-filter')?.value||'pte_facturar';
+
+  const items=[];
+  // Fiscal
+  D.fiscal.filter(e=>!ff||e.facturacion===ff).forEach(e=>{
+    if(!s||[e.numero,e.cliente,e.asunto].join(' ').toLowerCase().includes(s))
+      items.push({tipo:'💼 Fiscal',ref:e.numero,cliente:e.cliente,concepto:e.asunto||e.tipo,importe:e.total,recibo:e.recibo,facturacion:e.facturacion,id:e.id,col:'fiscal'});
+  });
+  // Rentas (campaña activa)
+  getRentas().filter(r=>!ff||r.facturacion===ff).forEach(r=>{
+    if(!s||[r.nombre,r.parejaNombre].join(' ').toLowerCase().includes(s))
+      items.push({tipo:'📄 Renta '+campanaRentas,ref:r.nombre,cliente:r.nombre+(r.parejaNombre?' + '+r.parejaNombre:''),concepto:'Renta '+campanaRentas,importe:r.precio,recibo:r.recibo,facturacion:r.facturacion,id:r.id,col:'renta'});
+  });
+  // Becas (campaña activa)
+  getBecas().filter(b=>!ff||b.facturacion===ff).forEach(b=>{
+    if(!s||b.alumno.toLowerCase().includes(s))
+      items.push({tipo:'🎓 Beca '+campanaBecas,ref:b.alumno,cliente:b.alumno,concepto:'Beca '+campanaBecas,importe:b.precio,recibo:b.recibo,facturacion:b.facturacion,id:b.id,col:'beca'});
+  });
+
+  const tb=document.getElementById('fac-tbody');
+  if(!items.length){tb.innerHTML=`<tr><td colspan="8" style="text-align:center;padding:30px;color:var(--text-muted)">Sin resultados</td></tr>`;return;}
+  tb.innerHTML=items.map(it=>`<tr>
+    <td><span class="badge b-purple">${it.tipo}</span></td>
+    <td style="font-weight:600;color:var(--accent)">${it.ref}</td>
+    <td>${it.cliente}</td>
+    <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${it.concepto}</td>
+    <td style="font-weight:600">${fmtMoney(it.importe)}</td>
+    <td style="font-size:12px;color:var(--text-dim)">${it.recibo||'-'}</td>
+    <td><span class="badge ${FAC_BADGE[it.facturacion]||'b-gray'}">${FAC_TEXT[it.facturacion]||'-'}</span></td>
+    <td>
+      ${it.facturacion==='pte_facturar'?`<button class="btn btn-sm" style="background:var(--green-dim);color:var(--green);border:none;cursor:pointer;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600" onclick="cambiarFac('${it.col}','${campanaRentas}','${it.id}','facturado')">✅ Facturado</button>`:''}
+      ${it.facturacion==='facturado'?`<button class="btn btn-secondary btn-sm" onclick="cambiarFac('${it.col}','${campanaRentas}','${it.id}','pte_facturar')">↩️</button>`:''}
+    </td>
+  </tr>`).join('');
+}
+
+function cambiarFac(col, campana, id, estado) {
+  if(col==='fiscal'){
+    const e=D.fiscal.find(x=>x.id===id); if(e) e.facturacion=estado;
+  } else if(col==='renta'){
+    const e=getRentas().find(x=>x.id===id); if(e) e.facturacion=estado;
+  } else if(col==='beca'){
+    const e=getBecas().find(x=>x.id===id); if(e) e.facturacion=estado;
+  }
+  save(); renderAll();
+  showToast(estado==='facturado'?'✅ Marcado como facturado':'↩️ Revertido');
+}
+
+// ═══════════════════════════════════════════
+// CARPETAS FISCAL
+// ═══════════════════════════════════════════
+const TIPO_CARPETA={
+  'AGENCIA TRIBUTARIA':'FISCAL\\AGENCIA TRIBUTARIA','SEGURIDAD SOCIAL':'FISCAL\\SEGURIDAD SOCIAL',
+  'GESTION SOCIEDAD':'MERCANTIL','BECAS':'FISCAL\\BECAS','CERES':'FISCAL\\CERES',
+  'FACE':'FISCAL\\FACE','CONTRATO PRIVADO':'CONTRATOS','ALEGACIONES':'FISCAL\\ALEGACIONES','VARIOS':'FISCAL\\VARIOS'
+};
+
+function copiarRutaFiscal(id) {
+  const e=D.fiscal.find(x=>x.id===id); if(!e)return;
+  const base=D.config.rutaBase||'\\\\PACO-HP\\Users\\usuario\\Documents\\TRABAJOS';
+  const sub=TIPO_CARPETA[e.tipo]||'FISCAL';
+  const nombre=(e.numero+'-'+e.cliente+(e.asunto?'-'+e.asunto.substring(0,40):'')).replace(/[<>:"/\\|?*]/g,'').replace(/\s+/g,' ').trim();
+  const ruta=base+'\\'+sub+'\\'+nombre;
+  navigator.clipboard.writeText(ruta).then(()=>showToast('📂 Ruta copiada','info')).catch(()=>prompt('Ruta:',ruta));
+}
+
+// ═══════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════
+function openConfig() {
+  document.getElementById('cfg-url').value=D.config.sheetsUrl||'';
+  document.getElementById('cfg-ruta').value=D.config.rutaBase||'';
+  openModal('modal-config');
+}
+function saveConfig() {
+  D.config.sheetsUrl=document.getElementById('cfg-url').value.trim();
+  D.config.rutaBase=document.getElementById('cfg-ruta').value.trim();
+  save(); closeModal('modal-config'); showToast('Configuración guardada');
+}
+
+// ═══════════════════════════════════════════
+// SHEETS SYNC
+// ═══════════════════════════════════════════
+const SHEETS_URL=()=>D.config.sheetsUrl;
+
+async function syncToSheets(silent) {
+  if(!SHEETS_URL())return;
+  const total=D.fiscal.length+Object.values(D.rentas).flat().length+Object.values(D.becas).flat().length+D.seguimientoBecas.length;
+  if(total===0){console.warn('⛔ Subida cancelada: datos vacíos.');return;}
+  const st=document.getElementById('sync-status'); st.textContent='⬆️ Guardando...';
+  try {
+    // Fiscal
+    const fisCols=['id','numero','cliente','dni','telefono','email','localidad','certDigital','tipo','asunto','fechaInicio','fechaLimite','estado','resolucion','facturacion','total','provision','fechaProvision','otrosPagos','fechaOtros','cobrado','fechaCobro','recibo','pendiente','obs','createdAt'];
+    const fisRows=[fisCols,...D.fiscal.map(e=>fisCols.map(c=>e[c]!==undefined&&e[c]!==null?String(e[c]):''))];
+    await fetch(SHEETS_URL(),{method:'POST',mode:'no-cors',body:JSON.stringify({action:'escribir',hoja:'FiscalExp',datos:fisRows})});
+
+    // Rentas y Becas por campaña
+    for(const [campana,list] of Object.entries(D.rentas)){
+      if(!list.length)continue;
+      const cols=['id','nombre','dni','vdDni','ref','telefono','email','parejaNombre','parejaDni','parejaVdDni','parejaRef','invalidez','famNumerosa','extranjero','seguros','donaciones','patrimonio','obs','precio','fechaCobro','recibo','estado','facturacion','createdAt'];
+      const rows=[cols,...list.map(r=>cols.map(c=>r[c]!==undefined&&r[c]!==null?String(r[c]):''))];
+      await fetch(SHEETS_URL(),{method:'POST',mode:'no-cors',body:JSON.stringify({action:'escribir',hoja:'Rentas'+campana,datos:rows})});
+    }
+    for(const [campana,list] of Object.entries(D.becas)){
+      if(!list.length)continue;
+      const cols=['id','alumno','dni','vdDni','soporteDni','telefono','email','direccion','iban','cursoActual','centroActual','cursoSiguiente','centroSiguiente','localidadCentro','padreNombre','padreDni','padreVd','padreSoporte','padreTrabajo','madreNombre','madreDni','madreVd','madreSoporte','madreTrabajo','hermanos','anio','fechaInicio','precio','fechaCobro','recibo','estado','facturacion','obs','createdAt'];
+      const rows=[cols,...list.map(b=>cols.map(c=>b[c]!==undefined&&b[c]!==null?String(b[c]):''))];
+      await fetch(SHEETS_URL(),{method:'POST',mode:'no-cors',body:JSON.stringify({action:'escribir',hoja:'Becas'+campana,datos:rows})});
+    }
+
+    // Seguimiento Becas
+    if (D.seguimientoBecas.length) {
+      const segCols=['id','becaId','campana','alumno','anio','resultado','fechaResolucion','plazo','fechaInicio','documentacion','obs','estado','createdAt'];
+      const segRows=[segCols,...D.seguimientoBecas.map(s=>segCols.map(c=>s[c]!==undefined&&s[c]!==null?String(s[c]):''))];
+      await fetch(SHEETS_URL(),{method:'POST',mode:'no-cors',body:JSON.stringify({action:'escribir',hoja:'SeguimientoBecas',datos:segRows})});
+    }
+
+    st.textContent='☁️ '+new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+    if(!silent)showToast('✅ Datos subidos a Google Sheets');
+  }catch(e){st.textContent='❌ Error';if(!silent)showToast('Error: '+e.message,'error');}
+}
+
+async function syncFromSheets(silent) {
+  if(!SHEETS_URL())return;
+  const st=document.getElementById('sync-status'); st.textContent='⬇️ Cargando...';
+  try {
+    // Fiscal
+    const rFis=await fetch(SHEETS_URL()+'?action=leer&hoja=FiscalExp');
+    const jFis=await rFis.json();
+    if(jFis.success&&jFis.datos&&jFis.datos.length>1){
+      const h=jFis.datos[0];
+      D.fiscal=jFis.datos.slice(1).map(row=>{const o={};h.forEach((k,i)=>{o[k]=row[i]!==undefined?String(row[i]):'';});return o;}).filter(o=>o.id);
+    }
+
+    // Rentas por campaña
+    const anioCurr=new Date().getFullYear();
+    for(const campana of [String(anioCurr-1),String(anioCurr),String(anioCurr+1)]){
+      try {
+        const r=await fetch(SHEETS_URL()+'?action=leer&hoja=Rentas'+campana);
+        const j=await r.json();
+        if(j.success&&j.datos&&j.datos.length>1){
+          const h=j.datos[0];
+          D.rentas[campana]=j.datos.slice(1).map(row=>{const o={};h.forEach((k,i)=>{o[k]=row[i]!==undefined?String(row[i]):'';});
+            ['invalidez','famNumerosa','extranjero','seguros','donaciones','patrimonio'].forEach(k=>{o[k]=o[k]==='true'||o[k]===true;});
+            return o;}).filter(o=>o.id);
+        }
+      }catch(e){}
+    }
+
+    // Becas por campaña
+    for(const campana of [String(anioCurr-1),String(anioCurr),String(anioCurr+1)]){
+      try {
+        const r=await fetch(SHEETS_URL()+'?action=leer&hoja=Becas'+campana);
+        const j=await r.json();
+        if(j.success&&j.datos&&j.datos.length>1){
+          const h=j.datos[0];
+          D.becas[campana]=j.datos.slice(1).map(row=>{const o={};h.forEach((k,i)=>{o[k]=row[i]!==undefined?String(row[i]):'';});return o;}).filter(o=>o.id);
+        }
+      }catch(e){}
+    }
+
+    // Seguimiento Becas
+    try {
+      const rSeg=await fetch(SHEETS_URL()+'?action=leer&hoja=SeguimientoBecas');
+      const jSeg=await rSeg.json();
+      if(jSeg.success&&jSeg.datos&&jSeg.datos.length>1){
+        const h=jSeg.datos[0];
+        D.seguimientoBecas=jSeg.datos.slice(1).map(row=>{const o={};h.forEach((k,i)=>{o[k]=row[i]!==undefined?String(row[i]):'';});return o;}).filter(o=>o.id);
+      }
+    }catch(e){}
+
+    _syncEnabled=false;
+    localStorage.setItem(LS_KEY,JSON.stringify(D));
+    _syncEnabled=true;
+    renderAll();
+    st.textContent='☁️ '+new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+    if(!silent)showToast('✅ Datos descargados de Google Sheets');
+  }catch(e){st.textContent='❌ Error';if(!silent)showToast('Error: '+e.message,'error');throw e;}
+}
+
+// ═══════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════
+function renderDashboard() {
+  const anio = new Date().getFullYear();
+  // Ingresos Fiscal
+  const totalFis = D.fiscal.reduce((s,e)=>s+parseFloat(e.total||0),0);
+  const cobFis = D.fiscal.reduce((s,e)=>s+parseFloat(e.cobrado||0),0);
+  const pendFis = D.fiscal.reduce((s,e)=>s+parseFloat(e.pendiente||0),0);
+  // Ingresos Rentas campaña actual
+  const rentas = D.rentas[campanaRentas]||[];
+  const totalRen = rentas.reduce((s,r)=>s+parseFloat(r.precio||0),0);
+  const cobRen = rentas.filter(r=>r.estado==='cobrado').reduce((s,r)=>s+parseFloat(r.precio||0),0);
+  const pendRen = totalRen - cobRen;
+  // Ingresos Becas campaña actual
+  const becas = D.becas[campanaBecas]||[];
+  const totalBec = becas.reduce((s,b)=>s+parseFloat(b.precio||0),0);
+  const cobBec = becas.filter(b=>b.estado==='cobrado').reduce((s,b)=>s+parseFloat(b.precio||0),0);
+  const pendBec = totalBec - cobBec;
+
+  const tarjeta = (titulo, color, emoji, total, cobrado, pendiente, extra) => `
+    <div class="card" style="border-top:4px solid ${color}">
+      <div style="font-size:14px;font-weight:700;color:${color};margin-bottom:16px">${emoji} ${titulo}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;text-align:center">
+        <div><div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:800">${fmtMoney(total)}</div><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;margin-top:2px">Total</div></div>
+        <div><div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:800;color:var(--green)">${fmtMoney(cobrado)}</div><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;margin-top:2px">Cobrado</div></div>
+        <div><div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:800;color:${pendiente>0?'var(--red)':'var(--green)'}">${fmtMoney(pendiente)}</div><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;margin-top:2px">Pendiente</div></div>
+      </div>
+      ${extra?`<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:12px;color:var(--text-dim)">${extra}</div>`:''}
+    </div>`;
+
+  document.getElementById('dash-ingresos').innerHTML =
+    tarjeta('Fiscal', 'var(--accent)', '💼', totalFis, cobFis, pendFis, `${D.fiscal.length} expedientes · ${D.fiscal.filter(e=>e.estado==='PENDIENTE'||e.estado==='SOLICITADO').length} activos`) +
+    tarjeta('Rentas '+campanaRentas, 'var(--teal)', '📄', totalRen, cobRen, pendRen, `${rentas.length} rentas · ${rentas.filter(r=>r.estado==='cobrado').length} cobradas`) +
+    tarjeta('Becas '+campanaBecas, 'var(--gold)', '🎓', totalBec, cobBec, pendBec, `${becas.length} becas · ${becas.filter(b=>b.estado==='cobrado').length} cobradas`);
+
+  // Seguimientos urgentes
+  const segUrgentes = D.seguimientoBecas
+    .filter(s => s.estado !== 'resuelto')
+    .map(s => ({...s, dias: daysDiff(s.plazo)}))
+    .sort((a,b) => (a.dias||999)-(b.dias||999))
+    .slice(0, 6);
+
+  const segList = document.getElementById('dash-seg-list');
+  if (!segUrgentes.length) {
+    segList.innerHTML = '<div class="empty-state">✅ Sin seguimientos pendientes</div>';
+  } else {
+    segList.innerHTML = segUrgentes.map(s => {
+      const d = s.dias;
+      const color = d===null?'var(--text-muted)':d<=7?'var(--red)':d<=30?'var(--orange)':'var(--green)';
+      const dt = d===null?'Sin plazo':d===0?'¡HOY!':d===1?'¡Mañana!':d<0?`Vencido (${Math.abs(d)}d)`:d+'d';
+      return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
+        <div><div style="font-size:13px;font-weight:600">${s.alumno||'Sin alumno'}</div>
+        <div style="font-size:11px;color:var(--text-dim)">${s.campana||''} · ${RESULTADO_TEXT[s.resultado]||s.resultado||'-'}</div></div>
+        <span style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;background:${color}22;color:${color}">${dt}</span>
+      </div>`;
+    }).join('');
+  }
+
+  // Vencimientos fiscales próximos
+  const vencFiscal = D.fiscal
+    .filter(e => e.fechaLimite && (e.estado==='PENDIENTE'||e.estado==='SOLICITADO'))
+    .map(e => ({...e, dias: daysDiff(e.fechaLimite)}))
+    .filter(e => e.dias !== null && e.dias >= 0)
+    .sort((a,b) => a.dias-b.dias)
+    .slice(0, 6);
+
+  const vencList = document.getElementById('dash-venc-list');
+  if (!vencFiscal.length) {
+    vencList.innerHTML = '<div class="empty-state">✅ Sin vencimientos próximos</div>';
+  } else {
+    vencList.innerHTML = vencFiscal.map(e => {
+      const color = e.dias<=7?'var(--red)':e.dias<=15?'var(--orange)':'var(--green)';
+      return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)">
+        <div><div style="font-size:13px;font-weight:600">${e.cliente}</div>
+        <div style="font-size:11px;color:var(--text-dim)">${e.numero} · ${e.tipo||e.asunto?.substring(0,30)||'-'}</div></div>
+        <span style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;background:${color}22;color:${color}">${e.dias}d · ${fmtDate(e.fechaLimite)}</span>
+      </div>`;
+    }).join('');
+  }
+}
+
+// ═══════════════════════════════════════════
+// SEGUIMIENTO BECAS
+// ═══════════════════════════════════════════
+const RESULTADO_TEXT = {
+  'pendiente':'⏳ Pendiente','concedida':'✅ Concedida','denegada':'❌ Denegada',
+  'requerimiento':'📋 Requerimiento','modificacion':'✏️ Modificación'
+};
+const RESULTADO_BADGE = {
+  'pendiente':'b-orange','concedida':'b-green','denegada':'b-red',
+  'requerimiento':'b-blue','modificacion':'b-gold'
+};
+
+function renderCampanasSeg() {
+  const campanas = [...new Set([
+    ...getCampanas('becas'),
+    ...D.seguimientoBecas.map(s=>s.campana).filter(Boolean)
+  ])].sort((a,b)=>parseInt(b)-parseInt(a));
+  const el = document.getElementById('seg-campanas');
+  if (!el) return;
+  let html = campanas.map(c=>`<button class="campana-btn${c===campanaBecas?' active':''}" onclick="setCampana('becas','${c}')">${c}</button>`).join('');
+  el.innerHTML = html || '';
+}
+
+function renderSeguimiento() {
+  const s = (document.getElementById('seg-search')?.value||'').toLowerCase();
+  const fe = document.getElementById('seg-fest')?.value||'';
+  let list = D.seguimientoBecas.filter(sg => {
+    const ms = !s || (sg.alumno||'').toLowerCase().includes(s);
+    return ms && (!fe || sg.resultado===fe);
+  }).sort((a,b) => {
+    const da = daysDiff(a.plazo)||999, db = daysDiff(b.plazo)||999;
+    return da-db;
+  });
+  const tb = document.getElementById('seg-tbody');
+  if (!list.length) { tb.innerHTML=`<tr><td colspan="8" style="text-align:center;padding:30px;color:var(--text-muted)">${D.seguimientoBecas.length?'Sin resultados':'Añade el primer seguimiento de septiembre'}</td></tr>`; return; }
+  tb.innerHTML = list.map(sg => {
+    const dias = daysDiff(sg.plazo);
+    const diasHTML = dias!==null ? `<span style="font-size:11px;font-weight:700;padding:2px 7px;border-radius:4px;background:${dias<=7?'var(--red-dim)':dias<=30?'var(--orange-dim)':'var(--green-dim)'};color:${dias<=7?'var(--red)':dias<=30?'var(--orange)':'var(--green)'}">${fmtDate(sg.plazo)} (${dias}d)</span>` : '-';
+    return `<tr>
+      <td><strong>${sg.alumno||'-'}</strong></td>
+      <td>${sg.campana||'-'}</td>
+      <td><span class="badge ${RESULTADO_BADGE[sg.resultado]||'b-gray'}">${RESULTADO_TEXT[sg.resultado]||sg.resultado||'-'}</span></td>
+      <td>${fmtDate(sg.fechaResolucion)}</td>
+      <td>${diasHTML}</td>
+      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;color:var(--text-dim)">${sg.documentacion||'-'}</td>
+      <td><span class="badge ${ESTADO_BADGE[sg.estado]||'b-gray'}">${ESTADO_TEXT[sg.estado]||sg.estado||'-'}</span></td>
+      <td style="white-space:nowrap">
+        <button class="btn btn-secondary btn-sm" onclick="openModalSeguimiento('${sg.id}')">✏️</button>
+        <button class="btn btn-danger btn-sm" onclick="eliminarSeguimiento('${sg.id}')">🗑️</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+function openModalSeguimiento(id) {
+  document.getElementById('form-seg').reset();
+  document.getElementById('seg-id').value = '';
+  document.getElementById('modal-seg-title').textContent = 'Seguimiento septiembre — beca';
+  // Poblar select de campañas
+  const campanas = getCampanas('becas');
+  const selCamp = document.getElementById('seg-campana-sel');
+  selCamp.innerHTML = campanas.map(c=>`<option value="${c}">${c}</option>`).join('');
+  selCamp.value = campanaBecas;
+  cargarAlumnosSeg();
+  if (id) {
+    const sg = D.seguimientoBecas.find(x=>x.id===id); if(!sg) return;
+    document.getElementById('seg-id').value = sg.id;
+    document.getElementById('modal-seg-title').textContent = 'Seguimiento — '+sg.alumno;
+    selCamp.value = sg.campana||campanaBecas;
+    cargarAlumnosSeg();
+    document.getElementById('seg-alumno-sel').value = sg.becaId||'';
+    document.getElementById('seg-anio').value = sg.anio||'';
+    document.getElementById('seg-resultado').value = sg.resultado||'pendiente';
+    document.getElementById('seg-fecha-resolucion').value = sg.fechaResolucion||'';
+    document.getElementById('seg-plazo').value = sg.plazo||'';
+    document.getElementById('seg-fecha-inicio').value = sg.fechaInicio||'';
+    document.getElementById('seg-documentacion').value = sg.documentacion||'';
+    document.getElementById('seg-obs').value = sg.obs||'';
+    document.getElementById('seg-estado').value = sg.estado||'pendiente';
+  }
+  openModal('modal-seguimiento');
+}
+
+function cargarAlumnosSeg() {
+  const campana = document.getElementById('seg-campana-sel').value;
+  const becasCamp = D.becas[campana]||[];
+  const sel = document.getElementById('seg-alumno-sel');
+  sel.innerHTML = becasCamp.length
+    ? `<option value="">Selecciona alumno...</option>` + becasCamp.map(b=>`<option value="${b.id}">${b.alumno}</option>`).join('')
+    : `<option value="">Sin becas en ${campana}</option>`;
+}
+
+function saveSeguimiento(e) {
+  e.preventDefault();
+  const id = document.getElementById('seg-id').value;
+  const campana = document.getElementById('seg-campana-sel').value;
+  const becaId = document.getElementById('seg-alumno-sel').value;
+  const beca = (D.becas[campana]||[]).find(b=>b.id===becaId);
+  const sg = {
+    id: id||'SEG-'+Date.now(),
+    becaId, campana,
+    alumno: beca?.alumno||'',
+    anio: document.getElementById('seg-anio').value.trim(),
+    resultado: document.getElementById('seg-resultado').value,
+    fechaResolucion: document.getElementById('seg-fecha-resolucion').value,
+    plazo: document.getElementById('seg-plazo').value,
+    fechaInicio: document.getElementById('seg-fecha-inicio').value,
+    documentacion: document.getElementById('seg-documentacion').value.trim(),
+    obs: document.getElementById('seg-obs').value.trim(),
+    estado: document.getElementById('seg-estado').value,
+    createdAt: id?(D.seguimientoBecas.find(x=>x.id===id)?.createdAt||new Date().toISOString()):new Date().toISOString()
+  };
+  if (id) { const i=D.seguimientoBecas.findIndex(x=>x.id===id); if(i>=0)D.seguimientoBecas[i]=sg; }
+  else D.seguimientoBecas.push(sg);
+  save(); closeModal('modal-seguimiento'); renderAll();
+  showToast(id?'Seguimiento actualizado':'Seguimiento añadido ✅');
+}
+
+function eliminarSeguimiento(id) {
+  if (!confirm('¿Eliminar este seguimiento?')) return;
+  D.seguimientoBecas = D.seguimientoBecas.filter(x=>x.id!==id);
+  save(); renderAll(); showToast('Eliminado');
+}
+
+// ═══════════════════════════════════════════
+// NOMBRE ARCHIVOS RENTA
+// ═══════════════════════════════════════════
+function generarNombreRenta(r) {
+  const nombre = (r.nombre||'').replace(/[<>:"/\\|?*]/g,'').trim();
+  const pareja = r.parejaNombre ? (' '+r.parejaNombre).replace(/[<>:"/\\|?*]/g,'').trim() : '';
+  return {
+    renta: `Renta ${nombre}${pareja}`,
+    datos: `DF ${nombre}${pareja}`
+  };
+}
+
+function copiarNombreArchivoRenta(id, tipo) {
+  const r = getRentas().find(x=>x.id===id); if(!r) return;
+  const campana = campanaRentas;
+  const nombre = (r.nombre||'').replace(/[<>:"/\\|?*]/g,'').trim();
+  const pareja = r.parejaNombre ? ' '+r.parejaNombre.replace(/[<>:"/\\|?*]/g,'').trim() : '';
+  let texto = '';
+  if (tipo === 'renta') texto = `Renta ${nombre}${pareja}`;
+  else texto = `DF ${nombre}${pareja}`;
+  navigator.clipboard.writeText(texto).then(()=>showToast(`📋 "${texto}" copiado`,'info')).catch(()=>prompt('Nombre:', texto));
+}
+
+// ═══════════════════════════════════════════
+// ARRANQUE
+// ═══════════════════════════════════════════
+init();
+</script>
+</body>
+</html>
