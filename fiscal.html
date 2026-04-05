@@ -362,7 +362,10 @@ tbody tr:hover{background:var(--accent-light)}
       <div class="form-section">Identificación</div>
       <div class="form-group"><label>Nº Expediente *</label><input type="text" id="fis-numero" required placeholder="AS26/001"></div>
       <div class="form-group"><label>Cliente *</label><input type="text" id="fis-cliente" required></div>
-      <div class="form-group"><label>DNI/CIF</label><input type="text" id="fis-dni"></div>
+      <div class="form-group"><label>DNI/CIF</label><input type="text" id="fis-dni" oninput="this.value=this.value.toUpperCase().replace(/-/g,'')">
+        <button type="button" onclick="rellenarDesdeMaestroFIS('fis-dni','fis-cliente','fis-telefono','fis-email','mst-fis')" style="margin-top:4px;padding:4px 10px;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:11px;background:var(--surface2)">🔍 Buscar en ClientesMAESTRO</button>
+        <span id="mst-fis" style="font-size:11px;margin-left:6px;color:var(--accent)"></span>
+      </div>
       <div class="form-group"><label>Teléfono</label><input type="text" id="fis-telefono"></div>
       <div class="form-group"><label>Email</label><input type="email" id="fis-email"></div>
       <div class="form-group"><label>Localidad</label><input type="text" id="fis-localidad"></div>
@@ -427,7 +430,10 @@ tbody tr:hover{background:var(--accent-light)}
     <div class="form-grid three">
       <div class="form-section">Titular</div>
       <div class="form-group"><label>Nombre y apellidos *</label><input type="text" id="ren-nombre" required></div>
-      <div class="form-group"><label>DNI *</label><input type="text" id="ren-dni" required></div>
+      <div class="form-group"><label>DNI *</label><input type="text" id="ren-dni" required oninput="this.value=this.value.toUpperCase().replace(/-/g,'')">
+        <button type="button" onclick="rellenarDesdeMaestroFIS('ren-dni','ren-nombre','ren-telefono','ren-email','mst-ren')" style="margin-top:4px;padding:4px 10px;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:11px;background:var(--surface2)">🔍 Buscar en ClientesMAESTRO</button>
+        <span id="mst-ren" style="font-size:11px;margin-left:6px;color:var(--accent)"></span>
+      </div>
       <div class="form-group"><label>Fecha validez DNI</label><input type="date" id="ren-vd-dni"></div>
       <div class="form-group"><label>Código referencia fiscal</label><input type="text" id="ren-ref" placeholder="Código de referencia catastral/fiscal"></div>
       <div class="form-group"><label>Teléfono</label><input type="text" id="ren-telefono"></div>
@@ -487,7 +493,10 @@ tbody tr:hover{background:var(--accent-light)}
     <div class="form-grid three">
       <div class="form-section">Datos del alumno</div>
       <div class="form-group"><label>Nombre y apellidos *</label><input type="text" id="bec-alumno" required></div>
-      <div class="form-group"><label>DNI/NIE alumno</label><input type="text" id="bec-dni"></div>
+      <div class="form-group"><label>DNI/NIE alumno</label><input type="text" id="bec-dni" oninput="this.value=this.value.toUpperCase().replace(/-/g,'')">
+        <button type="button" onclick="rellenarDesdeMaestroFIS('bec-dni','bec-alumno','bec-telefono','bec-email','mst-bec')" style="margin-top:4px;padding:4px 10px;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:11px;background:var(--surface2)">🔍 Buscar en ClientesMAESTRO</button>
+        <span id="mst-bec" style="font-size:11px;margin-left:6px;color:var(--accent)"></span>
+      </div>
       <div class="form-group"><label>Fecha caducidad DNI/NIE</label><input type="date" id="bec-vd-dni"></div>
       <div class="form-group"><label>Nº soporte DNI/NIE</label><input type="text" id="bec-soporte-dni" placeholder="Nº soporte del documento"></div>
       <div class="form-group"><label>Teléfono contacto</label><input type="text" id="bec-telefono"></div>
@@ -796,32 +805,20 @@ function saveFiscal(e) {
   save(); closeModal('modal-fiscal'); renderAll();
   showToast(id?'Expediente actualizado':'Expediente creado ✅');
   enviarVtoFiscal(exp);
-}
-
-// ════════════ VENCIMIENTOS CENTRALES ════════════
-const URL_VTO_FIS = 'https://script.google.com/macros/s/AKfycbzSpWjKLGxRp4CR4miJk4uP7b6CNmmToqGrleJXbEtQX9T6BdRyLkMReE5lBGxVk5i9SA/exec';
-
-function enviarVtoFiscal(exp) {
-  const estadosCerrados = ['resuelto','archivado','cerrado','finalizado','completado'];
-  const cerrado = estadosCerrados.includes((exp.estado||'').toLowerCase());
-
-  if (cerrado) {
-    fetch(URL_VTO_FIS, { method:'POST', mode:'no-cors', body: JSON.stringify({
-      action:'completar', app:'Fiscal',
-      expediente: exp.numero, tipo: 'Fecha límite'
-    })});
-    return;
-  }
-
-  if (exp.fechaLimite) {
-    fetch(URL_VTO_FIS, { method:'POST', mode:'no-cors', body: JSON.stringify({
-      action:'upsert', app:'Fiscal',
-      expediente: exp.numero, cliente: exp.cliente,
-      fecha: exp.fechaLimite,
-      tipo: 'Fecha límite',
-      observaciones: exp.asunto || exp.tipo || '',
-      estado: 'Pendiente'
-    })});
+  // ── ClientesMAESTRO ──────────────────────────────────────
+  if (exp.cliente || exp.dni) {
+    const _p = (exp.cliente||'').trim().split(/\s+/);
+    guardarEnMaestro({
+      DNI_NIE:   (exp.dni||'').toUpperCase().replace(/-/g,''),
+      Nombre:    _p[0] || exp.cliente || '',
+      Apellido1: _p[1] || '',
+      Apellido2: _p[2] || '',
+      Telefono1: exp.telefono || '',
+      Email:     exp.email    || '',
+      Municipio: exp.localidad|| '',
+      Tipo:      exp.dni && exp.dni.startsWith('B') ? 'juridica' : 'fisica',
+      CIF:       exp.dni && exp.dni.startsWith('B') ? exp.dni : ''
+    });
   }
 }
 
@@ -1013,6 +1010,15 @@ function saveRenta(e) {
   else D.rentas[campana].push(r);
   save(); closeModal('modal-renta'); renderAll();
   showToast(id?'Renta actualizada':'Renta añadida ✅');
+  // ── ClientesMAESTRO ──────────────────────────────────────
+  if (r.nombre || r.dni) {
+    const _p = (r.nombre||'').trim().split(/\s+/);
+    guardarEnMaestro({ DNI_NIE:(r.dni||'').toUpperCase().replace(/-/g,''), Nombre:_p[0]||r.nombre||'', Apellido1:_p[1]||'', Apellido2:_p[2]||'', Email:r.email||'', Telefono1:r.telefono||'', Tipo:'fisica' });
+  }
+  if (r.parejaNombre || r.parejaDni) {
+    const _p2 = (r.parejaNombre||'').trim().split(/\s+/);
+    guardarEnMaestro({ DNI_NIE:(r.parejaDni||'').toUpperCase().replace(/-/g,''), Nombre:_p2[0]||r.parejaNombre||'', Apellido1:_p2[1]||'', Apellido2:_p2[2]||'', Tipo:'fisica' });
+  }
 }
 
 function showDetalleRenta(id) {
@@ -1659,6 +1665,60 @@ function copiarNombreArchivoRenta(id, tipo) {
 // ARRANQUE
 // ═══════════════════════════════════════════
 init();
+
+// ═══ CLIENTESMAESTRO ══════════════════════════════════════════════════════
+// ═══ VENCIMIENTOS CENTRALES ════════════════════════════════════════════════
+const URL_VTO_FIS = 'https://script.google.com/macros/s/AKfycbzSpWjKLGxRp4CR4miJk4uP7b6CNmmToqGrleJXbEtQX9T6BdRyLkMReE5lBGxVk5i9SA/exec';
+
+function enviarVtoFiscal(exp) {
+  const cerrado = ['finalizado','resuelto','archivado','cerrado'].includes((exp.estado||'').toLowerCase());
+  if (cerrado) {
+    fetch(URL_VTO_FIS, { method:'POST', mode:'no-cors', body: JSON.stringify({
+      action:'completar', app:'Fiscal', expediente: exp.numero, tipo:'Fecha límite'
+    })});
+    return;
+  }
+  if (exp.fechaLimite) {
+    fetch(URL_VTO_FIS, { method:'POST', mode:'no-cors', body: JSON.stringify({
+      action:'upsert', app:'Fiscal',
+      expediente: exp.numero, cliente: exp.cliente,
+      fecha: exp.fechaLimite, tipo:'Fecha límite',
+      observaciones: exp.asunto||exp.tipo||'', estado:'Pendiente'
+    })});
+  }
+}
+
+const URL_MAESTRO = 'https://script.google.com/macros/s/AKfycbyVXypuTXm5tRvbP-xJu06q7ZsJ2qve790lCyvBLJpr6jTckZhc6wZ4kX5XPhVOWCVrww/exec';
+
+function guardarEnMaestro(datos) {
+  if (!datos.DNI_NIE || !datos.Nombre) return;
+  fetch(URL_MAESTRO, { method:'POST', mode:'no-cors', body: JSON.stringify({ action:'upsert', datos }) });
+}
+
+async function buscarEnMaestro(dni) {
+  if (!dni || dni.length < 7) return null;
+  try {
+    const r = await fetch(URL_MAESTRO + '?action=buscar&dni=' + encodeURIComponent(dni.toUpperCase().replace(/-/g,'')));
+    const d = await r.json();
+    if (d && d.encontrado) return d.cliente;
+  } catch(e) {}
+  return null;
+}
+
+async function rellenarDesdeMaestroFIS(campoDni, campoNombre, campoTel, campoEmail, statusId) {
+  const dni = (document.getElementById(campoDni)?.value||'').trim();
+  const st  = document.getElementById(statusId);
+  if (!dni || dni.length < 7) { if(st) st.textContent='⚠ Escribe el DNI primero'; return; }
+  if(st) st.textContent='🔍 Buscando...';
+  const cli = await buscarEnMaestro(dni);
+  if (!cli) { if(st) st.textContent='❌ No encontrado en Maestro'; return; }
+  const set = (id, val) => { const el=document.getElementById(id); if(el&&!el.value&&val) el.value=val; };
+  const nombre = [cli.Nombre, cli.Apellido1, cli.Apellido2].filter(Boolean).join(' ');
+  set(campoNombre, nombre);
+  if(campoTel)   set(campoTel,   cli.Telefono1||'');
+  if(campoEmail) set(campoEmail, cli.Email||'');
+  if(st) st.textContent='✅ Datos cargados desde Maestro';
+}
 </script>
 </body>
 </html>
