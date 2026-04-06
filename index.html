@@ -1712,11 +1712,16 @@ async function rellenarDesdeMaestroFIS(campoDni, campoNombre, campoTel, campoEma
   if(st) st.textContent='🔍 Buscando...';
   const cli = await buscarEnMaestro(dni);
   if (!cli) { if(st) st.textContent='❌ No encontrado en Maestro'; return; }
-  const set = (id, val) => { const el=document.getElementById(id); if(el&&!el.value&&val) el.value=val; };
-  const nombre = [cli.Nombre, cli.Apellido1, cli.Apellido2].filter(Boolean).join(' ');
+  const set = (id, val) => { const el=document.getElementById(id); if(el && val) el.value=val; };
+  // Nombre completo
+  const nombre = cli.Razon_Social || [cli.Nombre, cli.Apellido1, cli.Apellido2].filter(Boolean).join(' ');
   set(campoNombre, nombre);
+  // Contacto
   if(campoTel)   set(campoTel,   cli.Telefono1||'');
   if(campoEmail) set(campoEmail, cli.Email||'');
+  // Localidad — puede ser fis-localidad, ren-localidad, bec-localidad
+  const campoLocalidad = campoDni.replace('-dni','-localidad');
+  set(campoLocalidad, cli.Municipio||'');
   if(st) st.textContent='✅ Datos cargados desde Maestro';
 }
 </script>
