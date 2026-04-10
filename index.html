@@ -1664,11 +1664,25 @@ function copiarNombreArchivoRenta(id, tipo) {
 // ═══════════════════════════════════════════
 // ARRANQUE
 // ═══════════════════════════════════════════
-init();
+// CONFIG CENTRAL
+const CONFIG_URL = 'https://gestoriajustoguevara-art.github.io/consola/config.json';
+let URL_VTO_FIS = '';
+let URL_MAESTRO_FIS = '';
 
-// ═══ CLIENTESMAESTRO ══════════════════════════════════════════════════════
-// ═══ VENCIMIENTOS CENTRALES ════════════════════════════════════════════════
-const URL_VTO_FIS = 'https://script.google.com/macros/s/AKfycbzSpWjKLGxRp4CR4miJk4uP7b6CNmmToqGrleJXbEtQX9T6BdRyLkMReE5lBGxVk5i9SA/exec';
+async function cargarConfigFiscal() {
+  try {
+    const res = await fetch(CONFIG_URL);
+    const cfg = await res.json();
+    URL_VTO_FIS     = cfg.vencimientos.scriptUrl;
+    URL_MAESTRO_FIS = cfg.clientesMaestro.scriptUrl;
+    if (!D.config.sheetsUrl) D.config.sheetsUrl = cfg.fiscal.scriptUrl;
+    console.log('✅ Config central cargada — Fiscal listo');
+  } catch(e) { console.error('❌ Error config:', e); }
+}
+
+cargarConfigFiscal().then(() => init());
+
+// ═══ VENCIMIENTOS CENTRALES ════════════════════════
 
 function enviarVtoFiscal(exp) {
   const cerrado = ['finalizado','resuelto','archivado','cerrado'].includes((exp.estado||'').toLowerCase());
@@ -1688,17 +1702,16 @@ function enviarVtoFiscal(exp) {
   }
 }
 
-const URL_MAESTRO = 'https://script.google.com/macros/s/AKfycbyVXypuTXm5tRvbP-xJu06q7ZsJ2qve790lCyvBLJpr6jTckZhc6wZ4kX5XPhVOWCVrww/exec';
 
 function guardarEnMaestro(datos) {
   if (!datos.DNI_NIE || !datos.Nombre) return;
-  fetch(URL_MAESTRO, { method:'POST', mode:'no-cors', body: JSON.stringify({ action:'upsert', datos }) });
+  fetch(URL_MAESTRO_FIS, { method:'POST', mode:'no-cors', body: JSON.stringify({ action:'upsert', datos }) });
 }
 
 async function buscarEnMaestro(dni) {
   if (!dni || dni.length < 7) return null;
   try {
-    const r = await fetch(URL_MAESTRO + '?action=buscar&dni=' + encodeURIComponent(dni.toUpperCase().replace(/-/g,'')));
+    const r = await fetch(URL_MAESTRO_FIS + '?action=buscar&dni=' + encodeURIComponent(dni.toUpperCase().replace(/-/g,'')));
     const d = await r.json();
     if (d && d.encontrado) return d.cliente;
   } catch(e) {}
