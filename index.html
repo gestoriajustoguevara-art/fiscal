@@ -216,6 +216,7 @@ tbody tr:hover{background:var(--accent-light)}
       <option value="en_tramite">En trámite</option>
       <option value="pte_facturar">Pte. facturar</option>
       <option value="facturado">Facturado</option>
+      <option value="nf">No facturar</option>
     </select>
     <button class="btn btn-primary" onclick="openModalFiscal()">+ Nuevo</button>
   </div>
@@ -396,7 +397,7 @@ tbody tr:hover{background:var(--accent-light)}
       </div>
       <div class="form-group"><label>Resolución</label><input type="text" id="fis-resolucion"></div>
       <div class="form-group"><label>Estado facturación</label>
-        <select id="fis-facturacion"><option value="en_tramite">⏳ En trámite</option><option value="pte_facturar">🔔 Pte. facturar</option><option value="facturado">✅ Facturado</option></select>
+        <select id="fis-facturacion"><option value="en_tramite">⏳ En trámite</option><option value="pte_facturar">🔔 Pte. facturar</option><option value="facturado">✅ Facturado</option><option value="nf">🚫 No facturar</option></select>
       </div>
 
       <div class="form-section">Económico</div>
@@ -473,7 +474,7 @@ tbody tr:hover{background:var(--accent-light)}
         </select>
       </div>
       <div class="form-group"><label>Estado facturación</label>
-        <select id="ren-facturacion"><option value="en_tramite">⏳ En trámite</option><option value="pte_facturar">🔔 Pte. facturar</option><option value="facturado">✅ Facturado</option></select>
+        <select id="ren-facturacion"><option value="en_tramite">⏳ En trámite</option><option value="pte_facturar">🔔 Pte. facturar</option><option value="facturado">✅ Facturado</option><option value="nf">🚫 No facturar</option></select>
       </div>
     </div>
     <div class="btn-row">
@@ -544,7 +545,7 @@ tbody tr:hover{background:var(--accent-light)}
         </select>
       </div>
       <div class="form-group"><label>Estado facturación</label>
-        <select id="bec-facturacion"><option value="en_tramite">⏳ En trámite</option><option value="pte_facturar">🔔 Pte. facturar</option><option value="facturado">✅ Facturado</option></select>
+        <select id="bec-facturacion"><option value="en_tramite">⏳ En trámite</option><option value="pte_facturar">🔔 Pte. facturar</option><option value="facturado">✅ Facturado</option><option value="nf">🚫 No facturar</option></select>
       </div>
       <div class="form-group full"><label>Observaciones</label><textarea id="bec-obs"></textarea></div>
     </div>
@@ -676,8 +677,8 @@ const ESTADO_TEXT = {
   'PENDIENTE':'Pendiente','SOLICITADO':'Solicitado','FINALIZADO':'Finalizado','DENEGADO':'Denegado',
   'pte_avisar':'⏳ Pte. avisar','avisado':'📞 Avisado','en_tramite':'📄 En trámite','tramitado':'✅ Tramitado','cobrado':'💶 Cobrado'
 };
-const FAC_BADGE = {'en_tramite':'b-gray','pte_facturar':'b-gold','facturado':'b-green'};
-const FAC_TEXT = {'en_tramite':'⏳ En trámite','pte_facturar':'🔔 Pte. facturar','facturado':'✅ Facturado'};
+const FAC_BADGE = {'en_tramite':'b-gray','pte_facturar':'b-gold','facturado':'b-green','nf':'b-red'};
+const FAC_TEXT = {'en_tramite':'⏳ En trámite','pte_facturar':'🔔 Pte. facturar','facturado':'✅ Facturado','nf':'🚫 No facturar'};
 
 // ═══════════════════════════════════════════
 // RENDER ALL
@@ -1664,25 +1665,11 @@ function copiarNombreArchivoRenta(id, tipo) {
 // ═══════════════════════════════════════════
 // ARRANQUE
 // ═══════════════════════════════════════════
-// CONFIG CENTRAL
-const CONFIG_URL = 'https://gestoriajustoguevara-art.github.io/consola/config.json';
-let URL_VTO_FIS = '';
-let URL_MAESTRO_FIS = '';
+init();
 
-async function cargarConfigFiscal() {
-  try {
-    const res = await fetch(CONFIG_URL);
-    const cfg = await res.json();
-    URL_VTO_FIS     = cfg.vencimientos.scriptUrl;
-    URL_MAESTRO_FIS = cfg.clientesMaestro.scriptUrl;
-    if (!D.config.sheetsUrl) D.config.sheetsUrl = cfg.fiscal.scriptUrl;
-    console.log('✅ Config central cargada — Fiscal listo');
-  } catch(e) { console.error('❌ Error config:', e); }
-}
-
-cargarConfigFiscal().then(() => init());
-
-// ═══ VENCIMIENTOS CENTRALES ════════════════════════
+// ═══ CLIENTESMAESTRO ══════════════════════════════════════════════════════
+// ═══ VENCIMIENTOS CENTRALES ════════════════════════════════════════════════
+const URL_VTO_FIS = 'https://script.google.com/macros/s/AKfycbzSpWjKLGxRp4CR4miJk4uP7b6CNmmToqGrleJXbEtQX9T6BdRyLkMReE5lBGxVk5i9SA/exec';
 
 function enviarVtoFiscal(exp) {
   const cerrado = ['finalizado','resuelto','archivado','cerrado'].includes((exp.estado||'').toLowerCase());
@@ -1702,16 +1689,17 @@ function enviarVtoFiscal(exp) {
   }
 }
 
+const URL_MAESTRO = 'https://script.google.com/macros/s/AKfycbyVXypuTXm5tRvbP-xJu06q7ZsJ2qve790lCyvBLJpr6jTckZhc6wZ4kX5XPhVOWCVrww/exec';
 
 function guardarEnMaestro(datos) {
   if (!datos.DNI_NIE || !datos.Nombre) return;
-  fetch(URL_MAESTRO_FIS, { method:'POST', mode:'no-cors', body: JSON.stringify({ action:'upsert', datos }) });
+  fetch(URL_MAESTRO, { method:'POST', mode:'no-cors', body: JSON.stringify({ action:'upsert', datos }) });
 }
 
 async function buscarEnMaestro(dni) {
   if (!dni || dni.length < 7) return null;
   try {
-    const r = await fetch(URL_MAESTRO_FIS + '?action=buscar&dni=' + encodeURIComponent(dni.toUpperCase().replace(/-/g,'')));
+    const r = await fetch(URL_MAESTRO + '?action=buscar&dni=' + encodeURIComponent(dni.toUpperCase().replace(/-/g,'')));
     const d = await r.json();
     if (d && d.encontrado) return d.cliente;
   } catch(e) {}
