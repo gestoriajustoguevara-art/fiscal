@@ -1813,6 +1813,7 @@ function renderInfoges(){
         +'<td style="text-align:right;font-weight:600">'+(con.checked?fmtMoney(con.uds*con.precio):'-')+'</td>'
         +'</tr>';
     });
+    html+='<tr><td colspan="5" style="padding:4px 12px"><button onclick="addConceptoInfoges('+ci+')" style="border:1px dashed var(--border);background:none;padding:4px 12px;border-radius:6px;font-size:12px;color:var(--accent);cursor:pointer;font-family:inherit">+ A\u00F1adir concepto</button></td></tr>';
   });
   tb.innerHTML=html;calcInfogesTotales();
 }
@@ -1821,6 +1822,7 @@ function toggleInfoges(ci,cj,val){infogesData[ci].conceptos[cj].checked=val;rend
 function updInfogesUds(ci,cj,val){infogesData[ci].conceptos[cj].uds=parseInt(val)||1;renderInfoges();}
 function updInfogesPrecio(ci,cj,val){infogesData[ci].conceptos[cj].precio=parseFloat(val)||0;renderInfoges();}
 function marcarTodosInfoges(val){infogesData.forEach(c=>c.conceptos.forEach(con=>{if(con.precio>0)con.checked=val;}));renderInfoges();}
+function addConceptoInfoges(ci){const desc=prompt('Nombre del concepto:');if(!desc)return;const precio=parseFloat(prompt('Precio (\u20AC):','0'))||0;infogesData[ci].conceptos.push({checked:true,desc:desc,uds:1,precio:precio,esNomina:desc.toLowerCase().includes('nomina')});renderInfoges();}
 
 function calcInfogesTotales(){
   let base=0;
