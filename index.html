@@ -1779,7 +1779,11 @@ async function cargarInfogesDesdeSheets(){
       infogesData=[];let cur=null;
       for(let i=1;i<j.datos.length;i++){
         const row=j.datos[i];const a=row[0],b=row[1],c=row[2],d=row[3];
-        if(b&&(a===''||a===null||a===undefined)&&!c&&!d){cur={nombre:b,conceptos:[]};infogesData.push(cur);}
+        // Client header: name in col A (merged cell), rest empty
+        if(a&&a!==true&&a!==false&&a!=='TRUE'&&a!=='FALSE'&&typeof a==='string'&&a.length>2&&!c&&!d&&b===''){
+          cur={nombre:a,conceptos:[]};infogesData.push(cur);
+        }
+        // Concept line: checkbox in col A (true/false), description in col B
         else if(cur&&b&&(a===true||a===false||a==='TRUE'||a==='FALSE')){
           cur.conceptos.push({checked:a===true||a==='TRUE',desc:b,uds:parseFloat(c)||1,precio:parseFloat(String(d).replace(',','.'))||0,esNomina:b.includes('\uD83D\uDD22')||b.toLowerCase().includes('nomina')});
         }
