@@ -157,6 +157,7 @@ tbody tr:hover{background:var(--accent-light)}
   <button class="nav-tab" onclick="showPanel('becas',this)">🎓 Becas</button>
   <button class="nav-tab" onclick="showPanel('seguimiento',this)">📋 Seg. Becas</button>
   <button class="nav-tab" onclick="showPanel('facturacion',this)">💶 Facturación</button>
+  <button class="nav-tab" onclick="showPanel('infoges',this)">🏢 Infoges</button>
 </div>
 
 <div class="main">
@@ -292,6 +293,43 @@ tbody tr:hover{background:var(--accent-light)}
       <th>Importe</th><th>Recibo</th><th>Estado</th><th>Acción</th>
     </tr></thead><tbody id="fac-tbody"></tbody></table>
   </div></div>
+</div>
+
+<!-- ═══════════ INFOGES ═══════════ -->
+<div class="panel" id="panel-infoges">
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+      <div style="font-size:18px;font-weight:700;color:var(--accent)">🏢 Facturación a Infoges</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-secondary btn-sm" onclick="cargarInfogesDesdeSheets()">⬇️ Cargar datos</button>
+        <button class="btn btn-primary" onclick="enviarInfogesAFacturacion()">📤 Enviar a Facturación</button>
+      </div>
+    </div>
+    <div class="search-bar">
+      <select id="inf-mes">
+        <option value="enero">Enero</option><option value="febrero">Febrero</option>
+        <option value="marzo">Marzo</option><option value="abril">Abril</option>
+        <option value="mayo">Mayo</option><option value="junio">Junio</option>
+        <option value="julio">Julio</option><option value="agosto">Agosto</option>
+        <option value="septiembre">Septiembre</option><option value="octubre">Octubre</option>
+        <option value="noviembre">Noviembre</option><option value="diciembre">Diciembre</option>
+      </select>
+      <button class="btn btn-sm btn-secondary" onclick="marcarTodosInfoges(true)">✅ Marcar todos</button>
+      <button class="btn btn-sm btn-secondary" onclick="marcarTodosInfoges(false)">⬜ Desmarcar todos</button>
+    </div>
+    <div class="table-wrap">
+      <table><thead><tr>
+        <th style="width:40px">✓</th><th>Cliente / Concepto</th><th style="width:60px">Uds</th>
+        <th style="width:100px">Precio</th><th style="width:100px">Total</th>
+      </tr></thead><tbody id="inf-tbody"></tbody></table>
+    </div>
+    <div style="margin-top:16px;background:var(--surface2);border-radius:10px;padding:16px;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;text-align:center">
+      <div><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase">Base imponible</div><div id="inf-base" style="font-size:20px;font-weight:700;color:var(--accent)">0,00 €</div></div>
+      <div><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase">IVA 21%</div><div id="inf-iva" style="font-size:20px;font-weight:700">0,00 €</div></div>
+      <div><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase">Retención 15%</div><div id="inf-ret" style="font-size:20px;font-weight:700;color:var(--red)">0,00 €</div></div>
+      <div><div style="font-size:11px;color:var(--text-muted);text-transform:uppercase">Total</div><div id="inf-total" style="font-size:24px;font-weight:800;color:var(--accent)">0,00 €</div></div>
+    </div>
+  </div>
 </div>
 
 </div><!-- /main -->
@@ -690,6 +728,7 @@ function renderAll() {
   renderCampanas('becas'); renderBecasStats(); renderBecas();
   renderCampanasSeg(); renderSeguimiento();
   renderFacturacion();
+  renderInfoges();
 }
 
 // ═══════════════════════════════════════════
@@ -1725,6 +1764,89 @@ async function rellenarDesdeMaestroFIS(campoDni, campoNombre, campoTel, campoEma
   set(campoLocalidad, cli.Municipio||'');
   if(st) st.textContent='✅ Datos cargados desde Maestro';
 }
+// ═══════════════════════════════════════════
+// INFOGES
+// ═══════════════════════════════════════════
+let infogesData=[];
+
+async function cargarInfogesDesdeSheets(){
+  if(!SHEETS_URL()){showToast('Configura la URL de Sheets primero','error');return;}
+  const st=document.getElementById('sync-status');st.textContent='⬇️ Cargando Infoges...';
+  try{
+    const r=await fetch(SHEETS_URL()+'?action=leer&hoja=Infoges');
+    const j=await r.json();
+    if(j.success&&j.datos&&j.datos.length>1){
+      infogesData=[];let cur=null;
+      for(let i=1;i<j.datos.length;i++){
+        const row=j.datos[i];const a=row[0],b=row[1],c=row[2],d=row[3];
+        if(b&&(a===''||a===null||a===undefined)&&!c&&!d){cur={nombre:b,conceptos:[]};infogesData.push(cur);}
+        else if(cur&&b&&(a===true||a===false||a==='TRUE'||a==='FALSE')){
+          cur.conceptos.push({checked:a===true||a==='TRUE',desc:b,uds:parseFloat(c)||1,precio:parseFloat(String(d).replace(',','.'))||0,esNomina:b.includes('\uD83D\uDD22')||b.toLowerCase().includes('nomina')});
+        }
+      }
+      renderInfoges();
+      st.textContent='\u2601\uFE0F '+new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+      showToast('\u2705 Infoges cargado: '+infogesData.length+' clientes');
+    }
+  }catch(e){st.textContent='\u274C Error';showToast('Error: '+e.message,'error');}
+}
+
+function renderInfoges(){
+  const tb=document.getElementById('inf-tbody');
+  if(!tb)return;
+  if(!infogesData.length){tb.innerHTML='<tr><td colspan="5" class="empty-state">Pulsa "\u2B07\uFE0F Cargar datos" para traer los clientes de Sheets</td></tr>';calcInfogesTotales();return;}
+  let html='';
+  infogesData.forEach((cli,ci)=>{
+    html+='<tr style="background:var(--accent-light)"><td colspan="5" style="font-weight:700;font-size:14px;padding:10px 12px;color:var(--accent)">'+cli.nombre+'</td></tr>';
+    cli.conceptos.forEach((con,cj)=>{
+      const bg=con.esNomina?'background:#FFF7ED;':'';
+      const fc=con.esNomina?'color:#B45309;font-weight:700;':'';
+      html+='<tr style="'+bg+'">'
+        +'<td style="text-align:center"><input type="checkbox" '+(con.checked?'checked':'')+' onchange="toggleInfoges('+ci+','+cj+',this.checked)" style="width:18px;height:18px;accent-color:var(--accent)"></td>'
+        +'<td style="'+fc+'">'+con.desc+'</td>'
+        +'<td><input type="number" value="'+con.uds+'" min="0" step="1" style="width:50px;text-align:center;border:1px solid var(--border);border-radius:6px;padding:4px;font-size:13px;'+fc+'" onchange="updInfogesUds('+ci+','+cj+',this.value)"></td>'
+        +'<td><input type="number" value="'+con.precio.toFixed(2)+'" min="0" step="0.01" style="width:80px;text-align:right;border:1px solid var(--border);border-radius:6px;padding:4px;font-size:13px" onchange="updInfogesPrecio('+ci+','+cj+',this.value)"></td>'
+        +'<td style="text-align:right;font-weight:600">'+(con.checked?fmtMoney(con.uds*con.precio):'-')+'</td>'
+        +'</tr>';
+    });
+  });
+  tb.innerHTML=html;calcInfogesTotales();
+}
+
+function toggleInfoges(ci,cj,val){infogesData[ci].conceptos[cj].checked=val;renderInfoges();}
+function updInfogesUds(ci,cj,val){infogesData[ci].conceptos[cj].uds=parseInt(val)||1;renderInfoges();}
+function updInfogesPrecio(ci,cj,val){infogesData[ci].conceptos[cj].precio=parseFloat(val)||0;renderInfoges();}
+function marcarTodosInfoges(val){infogesData.forEach(c=>c.conceptos.forEach(con=>{if(con.precio>0)con.checked=val;}));renderInfoges();}
+
+function calcInfogesTotales(){
+  let base=0;
+  infogesData.forEach(c=>c.conceptos.forEach(con=>{if(con.checked)base+=con.uds*con.precio;}));
+  base=Math.round(base*100)/100;
+  const iva=Math.round(base*21)/100;
+  const ret=Math.round(base*15)/100;
+  const total=Math.round((base+iva-ret)*100)/100;
+  const el=id=>document.getElementById(id);
+  if(el('inf-base'))el('inf-base').textContent=fmtMoney(base);
+  if(el('inf-iva'))el('inf-iva').textContent=fmtMoney(iva);
+  if(el('inf-ret'))el('inf-ret').textContent='- '+fmtMoney(ret);
+  if(el('inf-total'))el('inf-total').textContent=fmtMoney(total);
+}
+
+function enviarInfogesAFacturacion(){
+  const lineas=[];
+  infogesData.forEach(c=>{const activos=c.conceptos.filter(con=>con.checked);if(activos.length)lineas.push({cliente:c.nombre,conceptos:activos});});
+  if(!lineas.length){showToast('No hay conceptos marcados','error');return;}
+  let base=0;lineas.forEach(l=>l.conceptos.forEach(c=>base+=c.uds*c.precio));
+  base=Math.round(base*100)/100;
+  const mes=document.getElementById('inf-mes')?.value||'enero';
+  const numExp='AS26/'+String(D.fiscal.length+1).padStart(4,'0');
+  const desglose=lineas.map(l=>l.cliente+': '+l.conceptos.map(c=>c.desc+(c.uds>1?' x'+c.uds:'')+' ('+c.precio.toFixed(2)+'\u20AC)').join(', ')).join(' | ');
+  const exp={id:'INF-'+Date.now(),numero:numExp,cliente:'INFOGES GESTORES ADMINISTRATIVOS S.L.',dni:'B04353579',telefono:'950600220',email:'gerencia@infogesgestores.es',localidad:'El Alqui\u00E1n (Almer\u00EDa)',certDigital:'',tipo:'VARIOS',asunto:'Factura comisi\u00F3n '+mes.charAt(0).toUpperCase()+mes.slice(1)+' 2026',fechaInicio:new Date().toISOString().split('T')[0],fechaLimite:'',estado:'PENDIENTE',resolucion:'',facturacion:'pte_facturar',total:String(base),provision:'0',fechaProvision:'',otrosPagos:'0',fechaOtros:'',cobrado:'0',fechaCobro:'',recibo:'',pendiente:String(base),obs:desglose,createdAt:new Date().toISOString()};
+  D.fiscal.push(exp);save();renderAll();
+  showToast('\u2705 Expediente '+numExp+' creado \u00B7 '+fmtMoney(base)+' \u00B7 Pendiente de facturar');
+  showPanel('facturacion',document.querySelectorAll('.nav-tab')[6]);
+}
+
 </script>
 </body>
 </html>
