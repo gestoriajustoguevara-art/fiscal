@@ -301,9 +301,19 @@ tbody tr:hover{background:var(--accent-light)}
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
       <div style="font-size:18px;font-weight:700;color:var(--accent)">🏢 Facturación a Infoges</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-secondary btn-sm" onclick="toggleInfoHelp()" title="Cómo funciona">ℹ️</button>
         <button class="btn btn-secondary btn-sm" onclick="cargarInfogesDesdeSheets()">⬇️ Cargar datos</button>
         <button class="btn btn-primary" onclick="enviarInfogesAFacturacion()">📤 Enviar a Facturación</button>
       </div>
+    </div>
+    <div id="info-help" style="display:none;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px;font-size:13px;line-height:1.7;color:var(--text-dim)">
+      <div style="font-weight:700;color:var(--accent);margin-bottom:8px">ℹ️ Cómo funciona la pestaña Infoges</div>
+      <p><strong>1. Cargar datos / Descargar:</strong> Trae la hoja Infoges de Sheets con todos los clientes, conceptos y el estado de los checkboxes tal cual estén guardados.</p>
+      <p><strong>2. Trabajar:</strong> Marca o desmarca los conceptos que van en la factura del mes. Puedes cambiar unidades, precios, y añadir conceptos nuevos con el botón "+ Añadir concepto".</p>
+      <p><strong>3. Subir:</strong> Guarda TODO de vuelta en Sheets (sobreescribe la hoja Infoges). Así si abres desde otro ordenador, lo ves igual.</p>
+      <p><strong>4. Enviar a Facturación:</strong> Crea un expediente AS26/XXX en Fiscal con el desglose de lo marcado. Los clientes sin nada marcado no se incluyen.</p>
+      <p><strong>5. Histórico:</strong> La hoja Infoges siempre tiene el último estado. El detalle de cada factura queda guardado en el expediente de Fiscal (en Observaciones).</p>
+      <p style="margin-top:8px;color:var(--accent)"><strong>Flujo mensual:</strong> Cargar → Marcar lo del mes → Enviar a Facturación → Desmarcar todo → Subir (queda limpio para el mes siguiente).</p>
     </div>
     <div class="search-bar">
       <select id="inf-mes">
@@ -1384,7 +1394,7 @@ async function syncToSheets(silent) {
   const st=document.getElementById('sync-status'); st.textContent='⬆️ Guardando...';
   try {
     // Fiscal
-    const fisCols=['id','numero','cliente','dni','telefono','email','localidad','certDigital','tipo','asunto','fechaInicio','fechaLimite','estado','resolucion','facturacion','total','provision','fechaProvision','otrosPagos','fechaOtros','cobrado','fechaCobro','recibo','pendiente','obs','createdAt'];
+    const fisCols=['id','numero','cliente','dni','telefono','email','localidad','certDigital','tipo','asunto','fechaInicio','fechaLimite','estado','resolucion','facturacion','total','provision','fechaProvision','otrosPagos','fechaOtros','cobrado','fechaCobro','recibo','pendiente','obs','lineasInfoges','createdAt'];
     const fisRows=[fisCols,...D.fiscal.map(e=>fisCols.map(c=>e[c]!==undefined&&e[c]!==null?String(e[c]):''))];
     await fetch(SHEETS_URL(),{method:'POST',mode:'no-cors',body:JSON.stringify({action:'escribir',hoja:'FiscalExp',datos:fisRows})});
 
@@ -1409,8 +1419,23 @@ async function syncToSheets(silent) {
       await fetch(SHEETS_URL(),{method:'POST',mode:'no-cors',body:JSON.stringify({action:'escribir',hoja:'SeguimientoBecas',datos:segRows})});
     }
 
+    // Infoges - reescribir la hoja completa con el estado actual
+    if(infogesData.length){
+      const infRows=[['✓','CLIENTE / CONCEPTO','UDS','PRECIO','TOTAL']];
+      infogesData.forEach(cli=>{
+        infRows.push([cli.nombre,'','','','']);
+        cli.conceptos.forEach(con=>{
+          infRows.push([con.checked?'TRUE':'FALSE',con.desc,con.uds,con.precio,con.checked?con.uds*con.precio:0]);
+        });
+        const sub=cli.conceptos.filter(c=>c.checked).reduce((s,c)=>s+c.uds*c.precio,0);
+        infRows.push(['','','','Subtotal:',Math.round(sub*100)/100]);
+        infRows.push(['','','','','']);
+      });
+      await fetch(SHEETS_URL(),{method:'POST',mode:'no-cors',body:JSON.stringify({action:'escribir',hoja:'Infoges',datos:infRows})});
+    }
+
     st.textContent='☁️ '+new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
-    if(!silent)showToast('✅ Datos subidos a Google Sheets');
+    if(!silent)showToast('✅ Datos subidos a Google Sheets (incluido Infoges)');
   }catch(e){st.textContent='❌ Error';if(!silent)showToast('Error: '+e.message,'error');}
 }
 
@@ -1462,6 +1487,9 @@ async function syncFromSheets(silent) {
         D.seguimientoBecas=jSeg.datos.slice(1).map(row=>{const o={};h.forEach((k,i)=>{o[k]=row[i]!==undefined?String(row[i]):'';});return o;}).filter(o=>o.id);
       }
     }catch(e){}
+
+    // Infoges
+    try{await cargarInfogesDesdeSheets();}catch(e){}
 
     _syncEnabled=false;
     localStorage.setItem(LS_KEY,JSON.stringify(D));
@@ -1822,6 +1850,7 @@ function toggleInfoges(ci,cj,val){infogesData[ci].conceptos[cj].checked=val;rend
 function updInfogesUds(ci,cj,val){infogesData[ci].conceptos[cj].uds=parseInt(val)||1;renderInfoges();}
 function updInfogesPrecio(ci,cj,val){infogesData[ci].conceptos[cj].precio=parseFloat(val)||0;renderInfoges();}
 function marcarTodosInfoges(val){infogesData.forEach(c=>c.conceptos.forEach(con=>{if(con.precio>0)con.checked=val;}));renderInfoges();}
+function toggleInfoHelp(){const el=document.getElementById('info-help');el.style.display=el.style.display==='none'?'block':'none';}
 function addConceptoInfoges(ci){const desc=prompt('Nombre del concepto:');if(!desc)return;const precio=parseFloat(prompt('Precio (\u20AC):','0'))||0;infogesData[ci].conceptos.push({checked:true,desc:desc,uds:1,precio:precio,esNomina:desc.toLowerCase().includes('nomina')});renderInfoges();}
 
 function calcInfogesTotales(){
@@ -1847,7 +1876,15 @@ function enviarInfogesAFacturacion(){
   const mes=document.getElementById('inf-mes')?.value||'enero';
   const numExp='AS26/'+String(D.fiscal.length+1).padStart(4,'0');
   const desglose=lineas.map(l=>l.cliente+': '+l.conceptos.map(c=>c.desc+(c.uds>1?' x'+c.uds:'')+' ('+c.precio.toFixed(2)+'\u20AC)').join(', ')).join(' | ');
-  const exp={id:'INF-'+Date.now(),numero:numExp,cliente:'INFOGES GESTORES ADMINISTRATIVOS S.L.',dni:'B04353579',telefono:'950600220',email:'gerencia@infogesgestores.es',localidad:'El Alqui\u00E1n (Almer\u00EDa)',certDigital:'',tipo:'VARIOS',asunto:'Factura comisi\u00F3n '+mes.charAt(0).toUpperCase()+mes.slice(1)+' 2026',fechaInicio:new Date().toISOString().split('T')[0],fechaLimite:'',estado:'PENDIENTE',resolucion:'',facturacion:'pte_facturar',total:String(base),provision:'0',fechaProvision:'',otrosPagos:'0',fechaOtros:'',cobrado:'0',fechaCobro:'',recibo:'',pendiente:String(base),obs:desglose,createdAt:new Date().toISOString()};
+  // Build structured lines for Facturacion
+  const lineasFactura = [];
+  lineas.forEach(l => {
+    lineasFactura.push({bloque: l.cliente});
+    l.conceptos.forEach(c => {
+      lineasFactura.push({desc: c.desc, qty: c.uds, precio: c.precio, iva: 21});
+    });
+  });
+  const exp={id:'INF-'+Date.now(),numero:numExp,cliente:'INFOGES GESTORES ADMINISTRATIVOS S.L.',dni:'B04353579',telefono:'950600220',email:'gerencia@infogesgestores.es',localidad:'El Alqui\u00E1n (Almer\u00EDa)',certDigital:'',tipo:'INFOGES',asunto:'Factura comisi\u00F3n '+mes.charAt(0).toUpperCase()+mes.slice(1)+' 2026',fechaInicio:new Date().toISOString().split('T')[0],fechaLimite:'',estado:'PENDIENTE',resolucion:'',facturacion:'pte_facturar',total:String(base),provision:'0',fechaProvision:'',otrosPagos:'0',fechaOtros:'',cobrado:'0',fechaCobro:'',recibo:'',pendiente:String(base),obs:desglose,lineasInfoges:JSON.stringify(lineasFactura),createdAt:new Date().toISOString()};
   D.fiscal.push(exp);save();renderAll();
   showToast('\u2705 Expediente '+numExp+' creado \u00B7 '+fmtMoney(base)+' \u00B7 Pendiente de facturar');
   showPanel('facturacion',document.querySelectorAll('.nav-tab')[6]);
