@@ -1873,6 +1873,9 @@ function enviarInfogesAFacturacion(){
   if(!lineas.length){showToast('No hay conceptos marcados','error');return;}
   let base=0;lineas.forEach(l=>l.conceptos.forEach(c=>base+=c.uds*c.precio));
   base=Math.round(base*100)/100;
+  const iva=Math.round(base*21)/100;
+  const ret=Math.round(base*15)/100;
+  const totalFactura=Math.round((base+iva-ret)*100)/100;
   const mes=document.getElementById('inf-mes')?.value||'enero';
   const numExp='AS26/'+String(D.fiscal.length+1).padStart(4,'0');
   const desglose=lineas.map(l=>l.cliente+': '+l.conceptos.map(c=>c.desc+(c.uds>1?' x'+c.uds:'')+' ('+c.precio.toFixed(2)+'\u20AC)').join(', ')).join(' | ');
@@ -1884,9 +1887,9 @@ function enviarInfogesAFacturacion(){
       lineasFactura.push({desc: c.desc, qty: c.uds, precio: c.precio, iva: 21});
     });
   });
-  const exp={id:'INF-'+Date.now(),numero:numExp,cliente:'INFOGES GESTORES ADMINISTRATIVOS S.L.',dni:'B04353579',telefono:'950600220',email:'gerencia@infogesgestores.es',localidad:'El Alqui\u00E1n (Almer\u00EDa)',certDigital:'',tipo:'INFOGES',asunto:'Factura comisi\u00F3n '+mes.charAt(0).toUpperCase()+mes.slice(1)+' 2026',fechaInicio:new Date().toISOString().split('T')[0],fechaLimite:'',estado:'PENDIENTE',resolucion:'',facturacion:'pte_facturar',total:String(base),provision:'0',fechaProvision:'',otrosPagos:'0',fechaOtros:'',cobrado:'0',fechaCobro:'',recibo:'',pendiente:String(base),obs:desglose,lineasInfoges:JSON.stringify(lineasFactura),createdAt:new Date().toISOString()};
+  const exp={id:'INF-'+Date.now(),numero:numExp,cliente:'INFOGES GESTORES ADMINISTRATIVOS S.L.',dni:'B04353579',telefono:'950600220',email:'gerencia@infogesgestores.es',localidad:'El Alqui\u00E1n (Almer\u00EDa)',certDigital:'',tipo:'INFOGES',asunto:'Factura comisi\u00F3n '+mes.charAt(0).toUpperCase()+mes.slice(1)+' 2026',fechaInicio:new Date().toISOString().split('T')[0],fechaLimite:'',estado:'PENDIENTE',resolucion:'',facturacion:'pte_facturar',total:String(totalFactura),provision:'0',fechaProvision:'',otrosPagos:'0',fechaOtros:'',cobrado:'0',fechaCobro:'',recibo:'',pendiente:String(totalFactura),obs:desglose,lineasInfoges:JSON.stringify(lineasFactura),createdAt:new Date().toISOString()};
   D.fiscal.push(exp);save();renderAll();
-  showToast('\u2705 Expediente '+numExp+' creado \u00B7 '+fmtMoney(base)+' \u00B7 Pendiente de facturar');
+  showToast('\u2705 Expediente '+numExp+' creado \u00B7 '+fmtMoney(totalFactura)+' \u00B7 Pendiente de facturar');
   showPanel('facturacion',document.querySelectorAll('.nav-tab')[6]);
 }
 
